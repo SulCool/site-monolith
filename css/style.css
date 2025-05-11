@@ -37,7 +37,7 @@ font-size: 20px;
 .pop{
     margin-top: 15px;
     height: 550px;
-    background-image: url('1.jpg');
+    background-image: url('/assets/1.jpg');
     background-size: cover;
     display: flex;
     filter: brightness(50%);
@@ -49,7 +49,7 @@ a:hover{
 }
 .compani{
     height: 130vh;
-    background-image: url('5.jfif');
+    background-image: url('/assets/5.jfif');
     background-size: cover;
     filter: brightness(50%);
     border-radius: 20px;
