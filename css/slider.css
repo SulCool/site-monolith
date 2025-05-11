@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Saira:wdth,wght@119.6,174&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(rgb(187, 187, 189), rgb(127, 118, 121));
+    font-family: "Montserrat", sans-serif;
+    overflow-x: hidden;
+    
+}
+.slide {
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform: scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+}
+.slide.active {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+.rating-star {
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.rating-star.active, .rating-star.hovered {
+    color: #f59e0b;
+}
+
+.dot {
+    transition: all 0.3s ease;
+    width: 8px;
+    height: 8px;
+}
+
+.dot.active {
+    width: 24px;
+    background-color: #3b82f6;
+}
+
+.comment-card {
+    transition: all 0.3s ease;
+}
+
+.comment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}

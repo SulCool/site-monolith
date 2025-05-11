@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ бетона</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="order.css">
+
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden" style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+            <!-- Шапка формы -->
+            <div class="bg-gray-600 py-6 px-8 text-white">
+                <div class="flex items-center justify-between ">
+                    <div>
+                        <h1 class="text-3xl font-bold">Заказ бетона</h1>
+                        <p class="mt-2 opacity-90">Заполните форму для оформления доставки</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-full text-gray-600">
+                        <i class="fas fa-truck-moving text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Основная часть формы -->
+            <div class="p-8">
+                <form id="orderForm" class="space-y-6">
+                    <!-- Личные данные -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">Личные данные</h2>
+                        
+                        <!-- ФИО -->
+                        <div>
+                            <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">ФИО</label>
+                            <div class="relative">
+                                <input type="text" id="fullName" name="fullName" required
+                                    class="input-highlight w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Иванов Иван Иванович">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Телефон -->
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Номер телефона</label>
+                            <div class="relative">
+                                <input type="tel" id="phone" name="phone" required
+                                    class="input-highlight w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="+7 (999) 123-45-67">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-phone text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Адрес -->
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес доставки</label>
+                            <div class="relative">
+                                <textarea id="address" name="address" rows="2" required
+                                    class="input-highlight w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Город, улица, дом, квартира"></textarea>
+                                <div class="absolute top-3 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Выбор бетона -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">Выбор бетона</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Марка M100 -->
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M100', 3200)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M100</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2">Для подготовительных работ, фундаментов</p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">3 200 ₽/м³</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Марка M200 -->
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M200', 3500)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M200</h3>
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2">Для фундаментов, полов, дорожек</p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">3 500 ₽/м³</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Марка M300 -->
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M300', 3800)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M300</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2">Для монолитных стен, перекрытий</p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">3 800 ₽/м³</span>
+                                </div>
+                            </div>
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M350', 6600)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M350</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">6 600 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M400', 7300)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M400</h3>
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">7 300 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M450', 8500)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M450</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">8 500 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('M500', 9100)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">M500</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">9 100 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('w2', 3000)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W2</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">3 000 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('w4', 4500)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W4</h3>
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">4 500 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('W6', 5300)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W6</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">5 300 ₽/м³</span>
+                                </div>
+                            </div>
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('W8', 5800)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W8</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">5 800 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('W10', 6700)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W10</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">6 700 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('W15', 7200)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W15</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">7 200 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('W20', 8700)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">W20</h3>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">8 700 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F50', 3200)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F50</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">3 200 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F100', 4100)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F100</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">4 100 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F150', 4800)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F150</h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">4 800 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F200', 6100)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F200</h3>
+                                    <span class="bg-purple-100 text-purle-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">6 100 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F250', 5300)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F250</h3>
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">5 300 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F300', 6900)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F300</h3>
+                                    <span class="bg-green-100 text-grenn-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">6 900 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F350', 7500)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F350</h3>
+                                    <span class="bg-green-100 text-grenn-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">7 500 ₽/м³</span>
+                                </div>
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F400', 8200)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F400</h3>
+                                    <span class="bg-purple-100 text-purle-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">8 200 ₽/м³</span>
+                                </div> 
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F450', 9100)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F450</h3>
+                                    <span class="bg-purple-100 text-purle-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">9 100 ₽/м³</span>
+                                </div> 
+                            </div>
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-blue-400" onclick="selectConcrete('F500', 10500)">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold text-lg">F500</h3>
+                                    <span class="bg-purple-100 text-purle-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mt-2"></p>
+                                <div class="mt-4 flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">от</span>
+                                    <span class="font-bold text-blue-600">10 500 ₽/м³</span>
+                                </div>
+                            </div>
+                        </div>              
+                        <input type="hidden" id="concreteType" name="concreteType" value="">
+                        <input type="hidden" id="concretePrice" name="concretePrice" value="">
+                        
+                        <!-- Количество бетона -->
+                        <div class="mt-6">
+                            <label for="concreteAmount" class="block text-sm font-medium text-gray-700 mb-1">Количество бетона (м³)</label>
+                            <div class="flex items-center">
+                                <button type="button" onclick="changeAmount(-0.5)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l-lg">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" id="concreteAmount" name="concreteAmount" min="0.5" step="0.5" value="1" 
+                                    class="input-highlight w-20 text-center border-t border-b border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button type="button" onclick="changeAmount(0.5)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r-lg">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <span class="ml-3 text-gray-600">м³</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопка отправки -->
+                    <div class="pt-4">
+                        <button type="button" onclick="showSummary()" class="w-full bg-gray-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                            Показать заказ
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Сводка заказа -->
+                <div id="orderSummary" class="mt-8 bg-gray-50 border border-gray-200 rounded-xl p-6 hidden">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Сводка заказа</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ФИО:</span>
+                            <span id="summaryName" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Телефон:</span>
+                            <span id="summaryPhone" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Адрес доставки:</span>
+                            <span id="summaryAddress" class="font-medium text-right max-w-xs"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Марка бетона:</span>
+                            <span id="summaryConcrete" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Количество:</span>
+                            <span id="summaryAmount" class="font-medium"></span>
+                        </div>
+                        <div class="border-t border-gray-200 my-3"></div>
+                        <div class="flex justify-between text-lg font-bold">
+                            <span>Итого:</span>
+                            <span id="summaryTotal" class="text-blue-600"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-between">
+                        <button type="button" onclick="hideSummary()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+                            Изменить
+                        </button>
+                        <button type="button" onclick="submitOrder()" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
+                            Подтвердить заказ <i class="fas fa-check ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Выбор типа бетона
+        function selectConcrete(type, price) {
+            document.getElementById('concreteType').value = type;
+            document.getElementById('concretePrice').value = price;
+            
+            // Удаляем выделение у всех карточек
+            document.querySelectorAll('.concrete-card').forEach(card => {
+                card.classList.remove('border-blue-500', 'ring-2', 'ring-blue-300');
+                card.classList.add('border-gray-200');
+            });
+            
+            // Добавляем выделение выбранной карточке
+            event.currentTarget.classList.remove('border-gray-200');
+            event.currentTarget.classList.add('border-blue-500', 'ring-2', 'ring-blue-300');
+        }
+        
+        // Изменение количества бетона
+        function changeAmount(value) {
+            const amountInput = document.getElementById('concreteAmount');
+            let newValue = parseFloat(amountInput.value) + value;
+            
+            if (newValue < 0.5) newValue = 0.5;
+            amountInput.value = newValue.toFixed(1);
+        }
+        
+        // Показать сводку заказа
+        function showSummary() {
+            const form = document.getElementById('orderForm');
+            const summary = document.getElementById('orderSummary');
+            
+            // Проверка заполнения обязательных полей
+            if (!form.fullName.value || !form.phone.value || !form.address.value || !form.concreteType.value) {
+                alert('Пожалуйста, заполните все обязательные поля и выберите марку бетона');
+                return;
+            }
+            
+            // Заполнение сводки
+            document.getElementById('summaryName').textContent = form.fullName.value;
+            document.getElementById('summaryPhone').textContent = form.phone.value;
+            document.getElementById('summaryAddress').textContent = form.address.value;
+            document.getElementById('summaryConcrete').textContent = form.concreteType.value;
+            document.getElementById('summaryAmount').textContent = form.concreteAmount.value + ' м³';
+            
+            // Расчет стоимости
+            const total = parseFloat(form.concretePrice.value) * parseFloat(form.concreteAmount.value);
+            document.getElementById('summaryTotal').textContent = total.toLocaleString('ru-RU') + ' ₽';
+            
+            // Показать сводку
+            summary.classList.remove('hidden');
+            summary.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Скрыть сводку заказа
+        function hideSummary() {
+            document.getElementById('orderSummary').classList.add('hidden');
+        }
+        
+        // Отправка заказа
+        function submitOrder() {
+            const form = document.getElementById('orderForm');
+            
+            // Здесь можно добавить AJAX-запрос для отправки данных на сервер
+            alert('Заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.');
+            
+            // Очистка формы
+            form.reset();
+            hideSummary();
+            
+            // Сброс выделения карточек бетона
+            document.querySelectorAll('.concrete-card').forEach(card => {
+                card.classList.remove('border-blue-500', 'ring-2', 'ring-blue-300');
+                card.classList.add('border-gray-200');
+            });
+            
+            // Показать сообщение об успехе
+            const successMessage = document.createElement('div');
+            successMessage.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center';
+            successMessage.innerHTML = `
+                <i class="fas fa-check-circle mr-2 text-xl"></i>
+                <span>Ваш заказ успешно отправлен!</span>
+            `;
+            document.body.appendChild(successMessage);
+            
+            setTimeout(() => {
+                successMessage.remove();
+            }, 3000);
+        }
+        
+        // Маска для телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+            e.target.value = !x[2] ? x[1] : '+7 (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+        });
+    </script>
+</body>
+</html>

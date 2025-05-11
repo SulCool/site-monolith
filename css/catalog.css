@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Saira:wdth,wght@119.6,174&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: rgb(187, 187, 189);
+    font-family: "Montserrat", sans-serif;
+    overflow-x: hidden;
+    
+}
+a  {
+    text-decoration: none;
+    color: black;
+    padding: 5px;
+    font-size: 20px;
+   
+}
+ .mark{
+    height: 65vh;
+    border: 3px solid black;
+    width: 90vw;
+    margin-left: 5vw;
+    border-radius:10px;
+ }
+ .xlopok{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    margin-top: 3vh;
+    padding-left: 1vw;
+}
+
+li{
+    font-size: 20px;
+}
+
+.primer
+{
+height: 50vh;
+width: 100vw;
+filter: brightness(50%);
+border-radius: 20px;
+margin-left: 20vw;
+margin-top: 10vh;
+}
+
+.calculator {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    height: 40vh;
+    margin-left: 60vw;
+    margin-top: 10vh;
+    background: linear-gradient(rgb(187, 187, 189), rgb(127, 118, 121));
+}
+
+input[type="number"] {
+    width: 100px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.price{
+  position: absolute;
+  border: 3px solid black;
+  height: 60vh;
+  width: 50vw;  
+  border-radius: 10px;
+  margin-top: -40vh;
+  margin-left: 3vw;
+  background: linear-gradient(rgb(187, 187, 189), rgb(127, 118, 121));
+  -webkit-box-shadow: 16px 14px 11px -1px rgba(34, 60, 80, 0.2);
+-moz-box-shadow: 16px 14px 11px -1px rgba(34, 60, 80, 0.2);
+box-shadow: 16px 14px 11px -1px rgba(34, 60, 80, 0.2);
+}
+
+a:hover{
+    transform: scale(0.8);
+    text-decoration: underline;
+    transition: 0.3s;
+}
