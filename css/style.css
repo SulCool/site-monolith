@@ -1,75 +1,188 @@
-@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Saira:wdth,wght@119.6,174&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
-    background-color: rgb(187, 187, 189);
-    font-family: "Montserrat", sans-serif;
+body {
+    background-color: #bbbcbd;
+    font-family: 'Montserrat', sans-serif;
     overflow-x: hidden;
-    
 }
 
-header{
-    height: 80px;
+header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 5vw;
     display: flex;
-    flex-wrap: nowrap;
     align-items: center;
-    flex-direction: row;
     justify-content: space-between;
 }
 
-.sel{
-    width: 80vw;
+.logo img {
+    height: 70px;
+    width: 70px;
+}
+
+nav {
     display: flex;
-    
+    gap: 2rem;
 }
 
-a  {
-text-decoration: none;
-color: black;
-padding: 40px;
-font-size: 20px;
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-.pop{
-    margin-top: 15px;
-    height: 550px;
+nav a:hover {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.hero {
+    height: 500px;
     background-image: url('/assets/1.jpg');
     background-size: cover;
+    background-position: center;
+    position: relative;
     display: flex;
-    filter: brightness(50%);
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
 }
-a:hover{
-    transform: scale(0.8);
-    text-decoration: underline;
-    transition: 0.3s;
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
 }
-.compani{
-    height: 130vh;
+
+.hero h1 {
+    font-size: 4rem;
+    position: relative;
+    z-index: 1;
+}
+
+.company-section {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.company-section h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+}
+
+.company-section p {
+    color: #555;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.why-choose-us {
     background-image: url('/assets/5.jfif');
     background-size: cover;
-    filter: brightness(50%);
-    border-radius: 20px;
-    margin-top: 10vh;
+    background-position: center;
+    padding: 4rem 5vw;
+    color: white;
+    position: relative;
 }
-.advantage{
-   height: 80vh;
-   display: flex;
-   align-items: center;
-   justify-content: space-evenly;
+
+.why-choose-us::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
 }
-   
-.zamanyxa{
- width: 30vw;
- height: 40vh;
- border-radius:20px;
- border: 3px solid black;
- display: flex;
- justify-content: center;
- align-items: center;
- -webkit-box-shadow: 16px 14px 11px -1px rgba(34, 60, 80, 0.2);
--moz-box-shadow: 16px 14px 11px -1px rgba(34, 60, 80, 0.2);
-box-shadow: 16px 14px 11px -1px rgba(34, 60, 80, 0.2);}
+
+.why-choose-us h1 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.advantages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.advantage-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.advantage-card:hover {
+    transform: translateY(-5px);
+}
+
+.advantage-card img {
+    height: 80px;
+    width: 80px;
+    margin-bottom: 1rem;
+}
+
+.advantage-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.advantage-card p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    nav {
+        gap: 1rem;
+    }
+
+    nav a {
+        font-size: 1rem;
+    }
+
+    .company-section h1,
+    .why-choose-us h1 {
+        font-size: 2rem;
+    }
+
+    .company-section p {
+        font-size: 1rem;
+    }
+}
