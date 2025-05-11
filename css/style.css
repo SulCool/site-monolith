@@ -7,7 +7,9 @@
 }
 
 body {
-    background-color: #bbbcbd;
+    /* background-color: #bbbcbd; */
+    background: linear-gradient(rgb(187, 187, 189), rgb(127, 118, 121));
+    /* background-image: url('/assets/betonblur.jpg'); */
     font-family: 'Montserrat', sans-serif;
     overflow-x: hidden;
 }
@@ -77,22 +79,55 @@ nav a:hover {
 }
 
 .company-section {
-    max-width: 1200px;
+    max-width: 2000px;
     margin: 4rem auto;
-    padding: 0 2rem;
+    padding: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.company-section h1 {
-    color: #333;
-    margin-bottom: 1.5rem;
+.company-content {
+    flex: 1;
+}
+
+.company-content h1 {
     font-size: 2.5rem;
+    color: #222;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.company-section p {
-    color: #555;
-    font-size: 1.2rem;
-    line-height: 1.8;
+.company-item {
     margin-bottom: 2rem;
+}
+
+.company-item h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.company-item p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.company-image {
+    flex: 1;
+    max-width: 50%;
+}
+
+.company-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .why-choose-us {
@@ -164,6 +199,40 @@ nav a:hover {
     line-height: 1.6;
 }
 
+.scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #7fbf94;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-top:hover {
+    background: #7fbf94;
+    transform: scale(1.1);
+}
+
+.scroll-to-top i {
+    font-size: 1.5rem;
+}
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2.5rem;
@@ -177,12 +246,29 @@ nav a:hover {
         font-size: 1rem;
     }
 
-    .company-section h1,
-    .why-choose-us h1 {
+    .company-section {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .company-image {
+        max-width: 100%;
+        margin-top: 2rem;
+    }
+
+    .company-content h1 {
         font-size: 2rem;
     }
 
-    .company-section p {
+    .company-item h2 {
+        font-size: 1.5rem;
+    }
+
+    .company-item p {
         font-size: 1rem;
+    }
+
+    .why-choose-us h1 {
+        font-size: 2rem;
     }
 }

@@ -27,14 +27,20 @@
     </section>
 
     <section class="company-section">
-        <h1>О компании</h1>
-        <p>Мы — профессиональная компания по доставке бетона, которая зарекомендовала себя как надежный партнер в строительстве. Наша миссия — обеспечить наших клиентов высококачественным бетоном и безупречным обслуживанием.</p>
-
-        <h1>Наша история</h1>
-        <p>С момента основания мы стремились стать лидерами в области бетона. Накопленный опыт и современные технологии позволяют нам предлагать широкий ассортимент бетонных смесей, соответствующих международным стандартам.</p>
-
-        <h1>Наша команда</h1>
-        <p>В нашем коллективе работают опытные специалисты, которые готовы ответить на вопросы и помочь вам выбрать подходящий продукт. Мы ценим каждого клиента и стремимся к долгосрочным отношениям на основе доверия и качества.</p>
+        <div class="company-content">
+            <h1>Делаем надёжно, работаем на результат!</h1>
+            <div class="company-item">
+                <h2>О компании</h2>
+                <p>Мы — профессиональная компания по доставке бетона, которая зарекомендовала себя как надежный партнер в строительстве. Наша миссия — обеспечить наших клиентов высококачественным бетоном и безупречным обслуживанием.</p>
+            </div>
+            <div class="company-item">
+                <h2>Наша история</h2>
+                <p>С момента основания мы стремились стать лидерами в области бетона. Накопленный опыт и современные технологии позволяют нам предлагать широкий ассортимент бетонных смесей, соответствующих международным стандартам.</p>
+            </div>
+        </div>
+        <div class="company-image">
+            <img src="/assets/betonnye-raboty.jpg" alt="Наша команда на стройке">
+        </div>
     </section>
 
     <section class="why-choose-us">
@@ -177,11 +183,11 @@
                     <div class="grid">
                         <div>
                             <label for="name">Ваше имя*</label>
-                            <input type="text" id="name" required>
+                            <input type="text" id="name" required />
                         </div>
                         <div>
                             <label for="company">Компания</label>
-                            <input type="text" id="company">
+                            <input type="text" id="company" />
                         </div>
                     </div>
 
@@ -194,7 +200,7 @@
                             <i class="fas fa-star rating-star" data-rating="4"></i>
                             <i class="fas fa-star rating-star" data-rating="5"></i>
                         </div>
-                        <input type="hidden" id="rating" required>
+                        <input type="hidden" id="rating" required />
                     </div>
 
                     <div>
@@ -218,7 +224,7 @@
                         </div>
                         <div>
                             <label for="volume">Объем (м³)</label>
-                            <input type="number" id="volume" min="0" step="0.5" value="0">
+                            <input type="number" id="volume" min="0" step="0.5" value="0" />
                         </div>
                     </div>
 
@@ -242,6 +248,10 @@
             </div>
         </div>
     </section>
+
+    <button id="scroll-to-top" class="scroll-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
     <script src="../js/slider.js"></script>
 </body>

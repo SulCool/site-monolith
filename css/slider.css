@@ -9,14 +9,14 @@
 .reviews-section h1 {
     text-align: center;
     font-size: 2.5rem;
-    color: #333;
+    color: white;
     margin-bottom: 1rem;
 }
 
 .reviews-section .intro-text {
     text-align: center;
     font-size: 1.2rem;
-    color: #555;
+    color: white;
     max-width: 600px;
     margin: 0 auto 3rem;
 }
@@ -116,10 +116,10 @@
 }
 
 .slide .order-info {
-    background: #e6f0ff;
+    background: #7fbf94;
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid #d1e0ff;
+    border: 1px solid white;
 }
 
 .slide .order-info .details {
@@ -130,11 +130,11 @@
 
 .slide .order-info p {
     font-size: 0.9rem;
-    color: #7fbf94;
+    color: white;
 }
 
 .slide .order-info .tag {
-    background: #d1e0ff;
+    background: white;
     color: #7fbf94;
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
@@ -186,11 +186,11 @@
 }
 
 .prev-btn {
-    left: 1rem;
+    left: -0.4rem;
 }
 
 .next-btn {
-    right: 1rem;
+    right: -0.4rem;
 }
 
 .review-form-container {
@@ -291,6 +291,8 @@
 }
 
 .form-content button {
+    position: relative;
+    top: 1rem;
     width: 100%;
     background: #7fbf94;
     color: white;
