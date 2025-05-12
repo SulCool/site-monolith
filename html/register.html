@@ -21,11 +21,11 @@
       <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
     </div>
     <nav>
-      <a href="index.html">Главная</a>
-      <a href="order.html">Заказ</a>
-      <a href="catalog.html">Категории товара</a>
-      <a href="register.html">Регистрация</a>
-      <a href="pro.html">Профиль</a>
+      <a href="/">Главная</a>
+      <a href="/order">Заказ</a>
+      <a href="/catalog">Категории товара</a>
+      <a href="/register">Регистрация</a>
+      <a href="/pro">Профиль</a>
     </nav>
   </header>
   <div class="content">
@@ -50,37 +50,32 @@
         </div>
         <button type="submit">Зарегистрироваться</button>
       </form>
+      <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const name = document.getElementById('name').value;
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          try {
+            const response = await fetch('http://localhost:3000/api/users/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+              alert('Регистрация успешна! Войдите в аккаунт.');
+              window.location.href = '/pro.html';
+            } else {
+              alert(data.error);
+            }
+          } catch (error) {
+            alert('Ошибка при регистрации');
+          }
+        });
+      </script>
     </div>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.querySelector('form');
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = form.querySelector('input[name="email"]').value;
-        const password = form.querySelector('input[name="password"]').value;
-        const name = form.querySelector('input[name="name"]').value;
-
-        try {
-          const response = await fetch('http://localhost:3000/api/users/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, name }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            alert('Регистрация успешна! Войдите в аккаунт.');
-            window.location.href = 'pro.html';
-          } else {
-            alert(data.error || 'Ошибка регистрации');
-          }
-        } catch (error) {
-          console.error('Ошибка:', error);
-          alert('Ошибка сервера');
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>

@@ -12,11 +12,18 @@ const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../..', 'html')));
+
 app.use(express.static(path.join(__dirname, '../..')));
 
+const pages = ['index', 'order', 'catalog', 'register', 'pro', 'slider'];
+pages.forEach(page => {
+    app.get(`/${page}`, (req, res) => {
+        res.sendFile(path.join(__dirname, '../..', 'html', `${page}.html`));
+    });
+});
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../..', 'html', 'index.html'));
+    res.redirect('/index');
 });
 
 app.use('/api/users', userRoutes);

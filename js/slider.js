@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             alert('Пожалуйста, войдите в аккаунт');
-            window.location.href = 'pro.html';
+            window.location.href = '/pro';
             return;
         }
 

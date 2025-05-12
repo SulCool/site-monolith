@@ -21,11 +21,11 @@
       <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
     </div>
     <nav>
-      <a href="index.html">Главная</a>
-      <a href="order.html">Заказ</a>
-      <a href="catalog.html">Категории товара</a>
-      <a href="register.html">Регистрация</a>
-      <a href="pro.html">Профиль</a>
+      <a href="/">Главная</a>
+      <a href="/order">Заказ</a>
+      <a href="/catalog">Категории товара</a>
+      <a href="/register">Регистрация</a>
+      <a href="/pro">Профиль</a>
     </nav>
   </header>
   <div class="content">
@@ -52,37 +52,60 @@
           <p>Еще нет аккаунта? <a href="/html/register.html">Регистрация</a></p>
         </div>
       </form>
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+      </form>
+      <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          try {
+            const response = await fetch('http://localhost:3000/api/users/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+              alert('Вход успешен!');
+              location.reload();
+            } else {
+              alert(data.error);
+            }
+          } catch (error) {
+            alert('Ошибка при входе');
+          }
+        });
+      </script>
+      <div id="orders"></div>
+      <script>
+        async function loadOrders() {
+          const user = JSON.parse(localStorage.getItem('user'));
+          if (!user) {
+            document.getElementById('orders').innerHTML = '<p>Пожалуйста, войдите в аккаунт</p>';
+            return;
+          }
+          const response = await fetch(`http://localhost:3000/api/orders/user/${user.id}`);
+          const orders = await response.json();
+          const ordersDiv = document.getElementById('orders');
+          ordersDiv.innerHTML = orders.map(order => `
+            <div class="order">
+                <p>Тип бетона: ${order.concreteType}</p>
+                <p>Объём: ${order.volume} м³</p>
+                <p>Доставка: ${order.deliveryType}</p>
+                <p>Цена: ${order.price} руб.</p>
+                <p>Статус: ${order.status}</p>
+            </div>
+        `).join('');
+        }
+        loadOrders();
+      </script>
     </div>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.querySelector('form');
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = form.querySelector('input[name="email"]').value;
-        const password = form.querySelector('input[name="password"]').value;
-
-        try {
-          const response = await fetch('http://localhost:3000/api/users/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            localStorage.setItem('user', JSON.stringify(data.user));
-            alert('Вход успешен!');
-            window.location.href = 'index.html'; 
-          } else {
-            alert(data.error || 'Ошибка входа');
-          }
-        } catch (error) {
-          console.error('Ошибка:', error);
-          alert('Ошибка сервера');
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>

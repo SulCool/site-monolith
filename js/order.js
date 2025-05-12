@@ -52,7 +52,7 @@ async function submitOrder() {
 
   if (!user) {
     alert('Пожалуйста, войдите в аккаунт');
-    window.location.href = 'pro.html';
+    window.location.href = '/pro';
     return;
   }
 

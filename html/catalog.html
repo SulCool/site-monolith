@@ -20,11 +20,11 @@
             <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
         </div>
         <nav>
-            <a href="index.html">Главная</a>
-            <a href="order.html">Заказ</a>
-            <a href="catalog.html">Категории товара</a>
-            <a href="register.html">Регистрация</a>
-            <a href="pro.html">Профиль</a>
+            <a href="/">Главная</a>
+            <a href="/order">Заказ</a>
+            <a href="/catalog">Категории товара</a>
+            <a href="/register">Регистрация</a>
+            <a href="/pro">Профиль</a>
         </nav>
     </header>
 
@@ -322,6 +322,22 @@
         }
 
         document.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
+    <div id="products"></div>
+    <script>
+        async function loadProducts() {
+            const response = await fetch('http://localhost:3000/api/products');
+            const products = await response.json();
+            const productsDiv = document.getElementById('products');
+            productsDiv.innerHTML = products.map(product => `
+            <div class="product">
+                <h3>${product.name}</h3>
+                <p>Цена: ${product.price} руб./м³</p>
+                <p>Описание: ${product.description}</p>
+            </div>
+        `).join('');
+        }
+        loadProducts();
     </script>
 </body>
 
