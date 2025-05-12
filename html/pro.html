@@ -1,56 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/pro.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/pro.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Document</title>
 </head>
+
 <body>
-    <div class="background"></div>
-    <header>
-        <div class="logo">
-            <img src="../assets/цемент.png" alt="Логотип Монолит">
-        </div>
-        <div class="contact-info">
-            <p><i class="fas fa-phone"></i> +7 (903) 888-78-11</p>
-            <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
-            <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
-        </div>
-        <nav>
-            <a href="index.html">Главная</a>
-            <a href="order.html">Заказ</a>
-            <a href="catalog.html">Категории товара</a>
-            <a href="register.html">Регистрация</a>
-            <a href="pro.html">Профиль</a>
-        </nav>
-    </header>
-    <div class="content">
-        <div class="wrapper">
-            <form action="#">
-              <h2>Вход</h2>
-                <div class="input-field">
-                <input type="text" required>
-                <label>Введите вашу почту</label>
-              </div>
-              <div class="input-field">
-                <input type="password" required>
-                <label>Введите ваш пароль</label>
-              </div>
-              <div class="forget">
-                <label for="remember">
-                  <input type="checkbox" id="remember">
-                  <p>Запомнить меня </p>
-                </label>
-                <a href="#">Забыли пароль?</a>
-              </div>
-              <button type="submit">Войти</button>
-              <div class="register">
-                <p>Еще нет аккаунта? <a href="/html/register.html">Регистрация</a></p>
-              </div>
-            </form>
-        </div>
+  <div class="background"></div>
+  <header>
+    <div class="logo">
+      <img src="/assets/цемент.png" alt="Логотип Монолит">
     </div>
+    <div class="contact-info">
+      <p><i class="fas fa-phone"></i> +7 (903) 888-78-11</p>
+      <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
+      <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
+    </div>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="order.html">Заказ</a>
+      <a href="catalog.html">Категории товара</a>
+      <a href="register.html">Регистрация</a>
+      <a href="pro.html">Профиль</a>
+    </nav>
+  </header>
+  <div class="content">
+    <div class="wrapper">
+      <form action="#">
+        <h2>Вход</h2>
+        <div class="input-field">
+          <input type="text" required>
+          <label>Введите вашу почту</label>
+        </div>
+        <div class="input-field">
+          <input type="password" required>
+          <label>Введите ваш пароль</label>
+        </div>
+        <div class="forget">
+          <label for="remember">
+            <input type="checkbox" id="remember">
+            <p>Запомнить меня </p>
+          </label>
+          <a href="#">Забыли пароль?</a>
+        </div>
+        <button type="submit">Войти</button>
+        <div class="register">
+          <p>Еще нет аккаунта? <a href="/html/register.html">Регистрация</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = form.querySelector('input[name="email"]').value;
+        const password = form.querySelector('input[name="password"]').value;
+
+        try {
+          const response = await fetch('http://localhost:3000/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+            alert('Вход успешен!');
+            window.location.href = 'index.html'; 
+          } else {
+            alert(data.error || 'Ошибка входа');
+          }
+        } catch (error) {
+          console.error('Ошибка:', error);
+          alert('Ошибка сервера');
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>

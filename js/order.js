@@ -46,31 +46,60 @@ function hideSummary() {
     document.getElementById('orderSummary').classList.add('hidden');
 }
 
-function submitOrder() {
-    const form = document.getElementById('orderForm');
+async function submitOrder() {
+  const form = document.getElementById('orderForm');
+  const user = JSON.parse(localStorage.getItem('user'));
 
-    // Здесь можно добавить AJAX-запрос для отправки данных на сервер
-    alert('Заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.');
+  if (!user) {
+    alert('Пожалуйста, войдите в аккаунт');
+    window.location.href = 'pro.html';
+    return;
+  }
 
-    form.reset();
-    hideSummary();
+  const orderData = {
+    userId: user.id,
+    productId: await getProductId(form.concreteType.value),
+    quantity: parseFloat(form.concreteAmount.value),
+  };
 
-    document.querySelectorAll('.concrete-card').forEach(card => {
+  try {
+    const response = await fetch('http://localhost:3000/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      alert('Заказ успешно оформлен! Мы свяжемся с вами.');
+      form.reset();
+      hideSummary();
+      document.querySelectorAll('.concrete-card').forEach(card => {
         card.classList.remove('border-blue-500', 'ring-2', 'ring-blue-300');
         card.classList.add('border-gray-200');
-    });
+      });
 
-    const successMessage = document.createElement('div');
-    successMessage.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center';
-    successMessage.innerHTML = `
-                <i class="fas fa-check-circle mr-2 text-xl"></i>
-                <span>Ваш заказ успешно отправлен!</span>
-            `;
-    document.body.appendChild(successMessage);
+      const successMessage = document.createElement('div');
+      successMessage.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center';
+      successMessage.innerHTML = `
+        <i class="fas fa-check-circle mr-2 text-xl"></i>
+        <span>Ваш заказ успешно отправлен!</span>
+      `;
+      document.body.appendChild(successMessage);
+      setTimeout(() => successMessage.remove(), 3000);
+    } else {
+      alert(data.error || 'Ошибка при оформлении заказа');
+    }
+  } catch (error) {
+    console.error('Ошибка:', error);
+    alert('Ошибка сервера');
+  }
+}
 
-    setTimeout(() => {
-        successMessage.remove();
-    }, 3000);
+async function getProductId(concreteType) {
+  const response = await fetch('http://localhost:3000/api/products');
+  const products = await response.json();
+  const product = products.find(p => p.name === concreteType);
+  return product ? product.id : null;
 }
 
 document.getElementById('phone').addEventListener('input', function (e) {
