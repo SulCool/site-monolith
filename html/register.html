@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/register.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <title>Document</title>
+  <title>Регистрация</title>
 </head>
 
 <body>
@@ -30,52 +30,75 @@
   </header>
   <div class="content">
     <div class="wrapper">
-      <form action="#">
+      <form id="registerForm">
         <h2>Регистрация</h2>
         <div class="input-field">
-          <input type="text" required>
+          <input type="text" id="name" required>
           <label>Введите ФИО</label>
         </div>
         <div class="input-field">
-          <input type="text" required>
+          <input type="email" id="email" required>
           <label>Введите вашу почту</label>
         </div>
         <div class="input-field">
-          <input type="password" required>
+          <input type="password" id="password" required>
           <label>Введите пароль</label>
         </div>
         <div class="input-field">
-          <input type="password" required>
+          <input type="password" id="confirmPassword" required>
           <label>Повторите пароль</label>
         </div>
         <button type="submit">Зарегистрироваться</button>
+        <div class="register">
+          <p>Уже есть аккаунт? <a href="/pro">Войти</a></p>
+        </div>
       </form>
-      <script>
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const name = document.getElementById('name').value;
-          const email = document.getElementById('email').value;
-          const password = document.getElementById('password').value;
-          try {
-            const response = await fetch('http://localhost:3000/api/users/register', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name, email, password }),
-            });
-            const data = await response.json();
-            if (response.ok) {
-              alert('Регистрация успешна! Войдите в аккаунт.');
-              window.location.href = '/pro.html';
-            } else {
-              alert(data.error);
-            }
-          } catch (error) {
-            alert('Ошибка при регистрации');
-          }
-        });
-      </script>
     </div>
   </div>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            alert('Пароли не совпадают');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('Пароль должен содержать минимум 6 символов');
+            return;
+        }
+
+        console.log('Отправка данных на регистрацию:', { name, email, password });
+        try {
+            const response = await fetch('http://localhost:3000/api/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password }),
+            });
+            const data = await response.json();
+            console.log('Ответ от сервера:', data);
+            if (response.ok) {
+                alert('Регистрация успешна! Войдите в аккаунт.');
+                window.location.href = '/pro'; 
+            } else {
+                if (data.errors && data.errors.length > 0) {
+                    const errorMessages = data.errors.map(error => error.msg).join('\n');
+                    alert(errorMessages);
+                } else {
+                    alert(data.error || 'Ошибка при регистрации');
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка сервера');
+        }
+    });
+</script>
 </body>
 
 </html>

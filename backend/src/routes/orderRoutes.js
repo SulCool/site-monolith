@@ -1,14 +1,29 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
-    const { userId, concreteType, volume, deliveryType, price } = req.body;
+const JWT_SECRET = ''; 
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Токен не предоставлен' });
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ error: 'Неверный токен' });
+        req.user = user;
+        next();
+    });
+};
+
+router.post('/', authenticateToken, async (req, res) => {
+    const { concreteType, volume, deliveryType, price } = req.body;
     try {
         const order = await prisma.order.create({
             data: {
-                userId,
+                userId: req.user.id,
                 concreteType,
                 volume,
                 deliveryType,
@@ -22,8 +37,11 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/user/:userId', async (req, res) => {
+router.get('/user/:userId', authenticateToken, async (req, res) => {
     const { userId } = req.params;
+    if (parseInt(userId) !== req.user.id) {
+        return res.status(403).json({ error: 'Доступ запрещён' });
+    }
     const orders = await prisma.order.findMany({
         where: { userId: parseInt(userId) },
     });
