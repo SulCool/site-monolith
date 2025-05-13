@@ -24,7 +24,6 @@
             <a href="/catalog">Категории товара</a>
             <a href="/register">Регистрация</a>
             <a href="/pro">Вход</a>
-            <a href="/profile">Профиль</a>
         </nav>
     </header>
     <div class="content">
@@ -56,12 +55,18 @@
         </div>
     </div>
     <script>
-        const token = localStorage.getItem('token');
-        console.log('Токен из localStorage:', token);
-
-        if (token) {
-            window.location.href = '/profile'; 
-        }
+        fetch('http://localhost:3000/api/users/profile', {
+            credentials: 'include', 
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (response.ok) {
+                    window.location.href = '/profile';
+                }
+            })
+            .catch(error => {
+                console.log('Пользователь не авторизован:', error);
+            });
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -73,14 +78,13 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }),
+                    credentials: 'include', 
                 });
                 const data = await response.json();
                 console.log('Ответ от сервера:', data);
                 if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    console.log('Токен сохранён:', data.token);
                     alert('Вход успешен!');
-                    window.location.href = '/profile'; 
+                    window.location.href = '/profile';
                 } else {
                     console.log('Ошибка входа:', data.error);
                     alert(data.error);
@@ -91,5 +95,6 @@
             }
         });
     </script>
+    <script src="/js/nav.js"></script>
 </body>
 </html>

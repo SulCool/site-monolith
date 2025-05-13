@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const slidesContainer = document.getElementById('slides-container');
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     let currentIndex = 0;
@@ -9,9 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadReviews() {
         try {
-            const response = await fetch('http://localhost:3000/api/reviews');
+            const response = await fetch('http://localhost:3000/api/reviews', {
+                credentials: 'include',
+            });
             const reviews = await response.json();
-            slidesContainer.innerHTML = ''; 
+            slidesContainer.innerHTML = '';
             const dotsContainer = document.querySelector('.dots');
             dotsContainer.innerHTML = '';
 
@@ -20,16 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 slide.className = `slide ${index === 0 ? 'active' : ''}`;
                 const concreteInfo =
                     review.concreteType && review.volume > 0 ? `Бетон ${review.concreteType} • ${review.volume} м³` : '';
-                const deliveryTag = review.deliveryType ? `<span class="tag">${review.deliveryType}</span>` : '';
+                const deliveryTag = review.deliveryType ? `${review.deliveryType}` : '';
 
                 slide.innerHTML = `
                     <div class="user-info">
-                        <div class="avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <div class="avatar"><i class="fas fa-user"></i></div>
                         <div>
                             <h3>${review.user.name}</h3>
-                            <p>Частный клиент</p>
+                            <p>${review.company || 'Частный клиент'}</p>
                         </div>
                     </div>
                     <div class="rating">
@@ -42,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="order-info">
                         <div class="details">
                             <div>
-                                ${concreteInfo ? `<p class="font-medium">${concreteInfo}</p>` : ''}
+                                ${concreteInfo ? `<p>${concreteInfo}</p>` : ''}
                                 <p>Доставка ${new Date(review.createdAt).toLocaleDateString('ru-RU')}</p>
                             </div>
-                            ${deliveryTag}
+                            <span class="tag">${deliveryTag}</span>
                         </div>
                     </div>
                 `;
@@ -66,17 +64,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 updatedSlides[currentIndex].classList.add('active');
                 updatedDots[currentIndex].classList.add('active');
                 startSlider();
+            } else {
+                slidesContainer.innerHTML = '<p>Отзывов пока нет.</p>';
             }
         } catch (error) {
             console.error('Ошибка загрузки отзывов:', error);
+            slidesContainer.innerHTML = '<p>Ошибка загрузки отзывов.</p>';
         }
     }
 
     function startSlider() {
-        slideInterval = setInterval(() => {
-            const slides = document.querySelectorAll('.slide');
-            goToSlide((currentIndex + 1) % slides.length);
-        }, 6000);
+        clearInterval(slideInterval);
+        const slides = document.querySelectorAll('.slide');
+        if (slides.length > 0) {
+            slideInterval = setInterval(() => {
+                goToSlide((currentIndex + 1) % slides.length);
+            }, 6000);
+        }
     }
 
     function goToSlide(index) {
@@ -103,10 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', () => {
         const slides = document.querySelectorAll('.slide');
         goToSlide((currentIndex + 1) % slides.length);
-    });
-
-    dots.forEach(dot => {
-        dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.index)));
     });
 
     const ratingStars = document.querySelectorAll('.rating-input i');
@@ -142,102 +142,54 @@ document.addEventListener('DOMContentLoaded', () => {
     reviewForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) {
-            alert('Пожалуйста, войдите в аккаунт');
-            window.location.href = '/pro';
-            return;
-        }
-
-        const name = document.getElementById('name').value;
-        const company = document.getElementById('company').value || 'Частный клиент';
-        const rating = document.getElementById('rating').value;
-        const reviewText = document.getElementById('review').value;
-        const concreteType = document.getElementById('concrete-type').value;
-        const volume = parseFloat(document.getElementById('volume').value) || null;
-        const deliveryType = document.getElementById('delivery-type').value;
-
-        if (!rating) {
-            alert('Пожалуйста, поставьте оценку');
-            return;
-        }
-
         try {
+            const authResponse = await fetch('http://localhost:3000/api/users/profile', {
+                credentials: 'include',
+            });
+            const userData = await authResponse.json();
+
+            if (!authResponse.ok) {
+                alert('Сессия истекла. Пожалуйста, войдите снова.');
+                window.location.href = '/pro';
+                return;
+            }
+
+            const company = document.getElementById('company').value || 'Частный клиент';
+            const rating = document.getElementById('rating').value;
+            const reviewText = document.getElementById('review').value;
+            const concreteType = document.getElementById('concrete-type').value;
+            const volume = parseFloat(document.getElementById('volume').value) || null;
+            const deliveryType = document.getElementById('delivery-type').value;
+
+            if (!rating) {
+                alert('Пожалуйста, поставьте оценку');
+                return;
+            }
+
             const response = await fetch('http://localhost:3000/api/reviews', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
-                    userId: user.id,
                     rating: parseInt(rating),
                     text: reviewText,
                     concreteType,
                     volume,
                     deliveryType,
+                    company,
                 }),
+                credentials: 'include',
             });
+
             const newReview = await response.json();
 
             if (response.ok) {
-                const newSlide = document.createElement('div');
-                newSlide.className = 'slide';
-                newSlide.style.opacity = '0';
-                newSlide.style.visibility = 'hidden';
-
-                const concreteInfo = concreteType && volume > 0 ? `Бетон ${concreteType} • ${volume} м³` : '';
-                const deliveryTag = deliveryType ? `<span class="tag">${deliveryType}</span>` : '';
-
-                newSlide.innerHTML = `
-                    <div class="user-info">
-                        <div class="avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div>
-                            <h3>${name}</h3>
-                            <p>${company}</p>
-                        </div>
-                    </div>
-                    <div class="rating">
-                        ${Array(5)
-                            .fill()
-                            .map((_, i) => `<i class="fas fa-star rating-star ${i < rating ? 'active' : ''}"></i>`)
-                            .join('')}
-                    </div>
-                    <p class="review-text">"${reviewText}"</p>
-                    <div class="order-info">
-                        <div class="details">
-                            <div>
-                                ${concreteInfo ? `<p class="font-medium">${concreteInfo}</p>` : ''}
-                                <p>Доставка ${new Date().toLocaleDateString('ru-RU')}</p>
-                            </div>
-                            ${deliveryTag}
-                        </div>
-                    </div>
-                `;
-
-                slidesContainer.appendChild(newSlide);
-                const updatedSlides = document.querySelectorAll('.slide');
-                const dotsContainer = document.querySelector('.dots');
-                const newDot = document.createElement('button');
-                newDot.className = 'dot';
-                newDot.dataset.index = updatedSlides.length - 1;
-                dotsContainer.appendChild(newDot);
-
-                const updatedDots = document.querySelectorAll('.dot');
-                newDot.addEventListener('click', () => goToSlide(parseInt(newDot.dataset.index)));
-
                 reviewForm.reset();
                 ratingStars.forEach(star => star.classList.remove('active', 'hovered'));
                 ratingInput.value = '';
 
-                setTimeout(() => {
-                    updatedSlides[currentIndex].classList.remove('active');
-                    updatedDots[currentIndex].classList.remove('active');
-                    currentIndex = updatedSlides.length - 1;
-                    newSlide.classList.add('active');
-                    newDot.classList.add('active');
-                    clearInterval(slideInterval);
-                    startSlider();
-                }, 100);
+                await loadReviews();
 
                 const notification = document.createElement('div');
                 notification.className = 'notification';
@@ -260,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // стрелка
     const scrollToTopBtn = document.getElementById('scroll-to-top');
 
     window.addEventListener('scroll', () => {

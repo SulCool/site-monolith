@@ -4,6 +4,7 @@ const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser'); 
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
@@ -12,18 +13,24 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true, 
+}));
 app.use(express.json());
 app.use(morgan('combined'));
+app.use(cookieParser()); 
 
 app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
-                'script-src': ["'self'", "'unsafe-inline'"], 
+                'script-src': ["'self'", "'unsafe-inline'"],
                 'script-src-attr': ["'self'", "'unsafe-inline'"],
                 'default-src': ["'self'"],
-                'style-src': ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+                'style-src': ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://fonts.googleapis.com'],
+                'font-src': ['https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'], 
+                'frame-src': ['https://www.google.com'], 
                 'img-src': ["'self'", 'data:', 'https:'],
             },
         },

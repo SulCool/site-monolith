@@ -20,8 +20,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = req.cookies.token;
     if (!token) return res.status(401).json({ error: 'Токен не предоставлен' });
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
@@ -96,11 +95,28 @@ router.post('/login', [
 
         const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1h' });
         console.log('Токен сгенерирован:', token);
-        res.json({ message: 'Вход успешен', token, user: { id: user.id, email: user.email, name: user.name } });
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600000,
+            sameSite: 'Strict',
+        });
+
+        res.json({ message: 'Вход успешен', user: { id: user.id, email: user.email, name: user.name } });
     } catch (error) {
         console.error('Ошибка при входе:', error);
         res.status(500).json({ error: 'Ошибка при входе' });
     }
+});
+
+router.post('/logout', (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
+    });
+    res.json({ message: 'Выход успешен' });
 });
 
 router.post('/reset-password', async (req, res) => {
@@ -162,7 +178,7 @@ router.post('/forgot-password', [
         const resetLink = `http://localhost:3000/reset-password-confirm?token=${resetToken}`;
 
         const mailOptions = {
-            from: process.env.EMAIL_USER, 
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'Сброс пароля',
             text: `Щелкните по ссылке для сброса пароля: ${resetLink}`,

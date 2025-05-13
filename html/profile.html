@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Профиль</title>
 </head>
+
 <body>
     <div class="background"></div>
     <header>
@@ -24,7 +26,6 @@
             <a href="/catalog">Категории товара</a>
             <a href="/register">Регистрация</a>
             <a href="/pro">Вход</a>
-            <a href="/profile">Профиль</a>
         </nav>
     </header>
     <div class="content">
@@ -38,25 +39,15 @@
                 <button class="logout-btn" onclick="logout()">Выйти</button>
                 <h3>Ваши заказы</h3>
                 <div id="orders" class="orders-list"></div>
-                <h3>Оставить отзыв</h3>
-                <textarea id="reviewText" rows="4" placeholder="Введите ваш отзыв..." class="review-input"></textarea>
-                <button onclick="submitReview()" class="submit-review-btn">Отправить отзыв</button>
-                <h3>Отзывы</h3>
-                <div id="reviewsList" class="reviews-list"></div>
             </div>
         </div>
     </div>
     <script>
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/pro'; 
-        }
-
         async function loadProfile() {
             try {
-                console.log('Отправляем запрос на /api/users/profile с токеном:', token);
+                console.log('Отправляем запрос на /api/users/profile');
                 const response = await fetch('http://localhost:3000/api/users/profile', {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    credentials: 'include',
                 });
                 const data = await response.json();
                 console.log('Ответ от сервера:', data);
@@ -77,69 +68,35 @@
                             </div>
                         `).join('');
                     }
-                    loadReviews();
                 } else {
                     console.log('Ошибка при загрузке профиля:', data.error);
-                    localStorage.removeItem('token');
                     window.location.href = '/pro';
                 }
             } catch (error) {
                 console.error('Ошибка загрузки профиля:', error);
                 alert('Ошибка загрузки профиля');
+                window.location.href = '/pro';
             }
         }
 
-        async function submitReview() {
-            const reviewText = document.getElementById('reviewText').value;
-            if (!reviewText) {
-                alert('Введите текст отзыва');
-                return;
-            }
-
-            const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+        async function logout() {
             try {
-                const response = await fetch('http://localhost:3000/api/reviews', {
+                const response = await fetch('http://localhost:3000/api/users/logout', {
                     method: 'POST',
-                    headers,
-                    body: JSON.stringify({ text: reviewText }),
+                    credentials: 'include',
                 });
-                const data = await response.json();
                 if (response.ok) {
-                    alert('Отзыв отправлен!');
-                    document.getElementById('reviewText').value = '';
-                    loadReviews();
-                } else {
-                    alert(data.error || 'Ошибка при отправке отзыва');
+                    console.log('Выход из аккаунта успешен');
+                    window.location.href = '/pro';
                 }
             } catch (error) {
-                alert('Ошибка сервера');
+                console.error('Ошибка при выходе:', error);
             }
-        }
-
-        async function loadReviews() {
-            try {
-                const response = await fetch('http://localhost:3000/api/reviews');
-                const data = await response.json();
-                if (response.ok) {
-                    const reviewsList = document.getElementById('reviewsList');
-                    reviewsList.innerHTML = data.map(review => `
-                        <div class="review-item">
-                            <p><strong>${review.name || 'Аноним'}</strong>: ${review.text}</p>
-                        </div>
-                    `).join('');
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки отзывов:', error);
-            }
-        }
-
-        function logout() {
-            console.log('Выход из аккаунта, удаляем токен');
-            localStorage.removeItem('token');
-            window.location.href = '/pro';
         }
 
         loadProfile();
     </script>
+    <script src="/js/nav.js"></script>
 </body>
+
 </html>
