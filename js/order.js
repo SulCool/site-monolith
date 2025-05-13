@@ -50,15 +50,15 @@ async function submitOrder() {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        alert('Пожалуйста, войдите в аккаунт');
-        window.location.href = '/pro';
+        showNotification('Пожалуйста, войдите в аккаунт', 'error');
+        setTimeout(() => window.location.href = '/pro', 1000);
         return;
     }
 
     const orderData = {
         concreteType: form.concreteType.value,
         volume: parseFloat(form.concreteAmount.value),
-        deliveryType: 'Стандартная', 
+        deliveryType: 'Стандартная',
         price: parseFloat(form.concretePrice.value) * parseFloat(form.concreteAmount.value),
     };
 
@@ -73,28 +73,18 @@ async function submitOrder() {
         });
         const data = await response.json();
         if (response.ok) {
-            alert('Заказ успешно оформлен! Мы свяжемся с вами.');
+            showNotification('Заказ успешно оформлен! Мы свяжемся с вами.', 'success');
             form.reset();
             hideSummary();
             document.querySelectorAll('.concrete-card').forEach(card => {
                 card.classList.remove('border-blue-500', 'ring-2', 'ring-blue-300');
                 card.classList.add('border-gray-200');
             });
-
-            const successMessage = document.createElement('div');
-            successMessage.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center';
-            successMessage.innerHTML = `
-                <i class="fas fa-check-circle mr-2 text-xl"></i>
-                <span>Ваш заказ успешно отправлен!</span>
-            `;
-            document.body.appendChild(successMessage);
-            setTimeout(() => successMessage.remove(), 3000);
         } else {
-            alert(data.error || 'Ошибка при оформлении заказа');
+            showNotification(data.error || 'Ошибка при оформлении заказа', 'error');
         }
     } catch (error) {
-        console.error('Ошибка:', error);
-        alert('Ошибка сервера');
+        showNotification('Ошибка сервера', 'error');
     }
 }
 

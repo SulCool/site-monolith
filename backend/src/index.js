@@ -25,7 +25,7 @@ app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
-                'script-src': ["'self'", "'unsafe-inline'"],
+                'script-src': ["'self'", "'unsafe-inline'", 'http://localhost:3000'],
                 'script-src-attr': ["'self'", "'unsafe-inline'"],
                 'default-src': ["'self'"],
                 'style-src': ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://fonts.googleapis.com'],
@@ -38,6 +38,23 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, '../..')));
+
+app.use('/js', express.static(path.join(__dirname, '../..', 'js'), {
+    setHeaders: (res) => {
+        res.set('Content-Type', 'application/javascript');
+    }
+}));
+
+app.get('/js/notifications.js', (req, res) => {
+    res.set('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, '../..', 'js', 'notifications.js'), (err) => {
+        if (err) {
+            console.error('Ошибка отправки notifications.js:', err);
+            res.status(404).send('Файл notifications.js не найден');
+        }
+    });
+});
+
 app.use(express.urlencoded({ extended: true }));
 
 const pages = ['index', 'order', 'catalog', 'register', 'pro', 'slider', 'profile', 'reset-password', 'reset-password-confirm', 'reviews'];

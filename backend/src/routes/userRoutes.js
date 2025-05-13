@@ -75,8 +75,8 @@ router.post('/login', [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
-    console.log('Попытка входа:', { email });
+    const { email, password, rememberMe } = req.body;
+    console.log('Попытка входа:', { email, rememberMe });
 
     try {
         const user = await prisma.user.findUnique({ where: { email } });
@@ -85,21 +85,17 @@ router.post('/login', [
             return res.status(404).json({ error: 'Пользователь не найден' });
         }
 
-        console.log('Найденный пользователь:', user);
-        console.log('Введённый пароль:', password);
-        console.log('Хеш пароля в базе:', user.password);
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        console.log('Сравнение пароля:', { password, isValid: isPasswordValid });
-
         if (!isPasswordValid) return res.status(401).json({ error: 'Неверный пароль' });
 
         const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1h' });
-        console.log('Токен сгенерирован:', token);
+
+        const maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000;
 
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600000,
+            maxAge,
             sameSite: 'Strict',
         });
 

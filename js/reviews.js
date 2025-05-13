@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="rating">
                         ${Array(5)
-                            .fill()
-                            .map((_, i) => `<i class="fas fa-star rating-star ${i < review.rating ? 'active' : ''}"></i>`)
-                            .join('')}
+                        .fill()
+                        .map((_, i) => `<i class="fas fa-star rating-star ${i < review.rating ? 'active' : ''}"></i>`)
+                        .join('')}
                     </div>
                     <p class="review-text">"${review.text}"</p>
                     <div class="order-info">
@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const userData = await authResponse.json();
 
             if (!authResponse.ok) {
-                alert('Сессия истекла. Пожалуйста, войдите снова.');
-                window.location.href = '/pro';
+                showNotification('Сессия истекла. Пожалуйста, войдите снова.', 'error');
+                setTimeout(() => window.location.href = '/pro', 1000);
                 return;
             }
 
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const deliveryType = document.getElementById('delivery-type').value;
 
             if (!rating) {
-                alert('Пожалуйста, поставьте оценку');
+                showNotification('Пожалуйста, поставьте оценку', 'error');
                 return;
             }
 
@@ -132,27 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 reviewForm.reset();
                 ratingStars.forEach(star => star.classList.remove('active', 'hovered'));
                 ratingInput.value = '';
-
                 await loadReviews();
-
-                const notification = document.createElement('div');
-                notification.className = 'notification';
-                notification.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    Спасибо! Ваш отзыв добавлен
-                `;
-                document.body.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.classList.add('fade-out');
-                    setTimeout(() => notification.remove(), 300);
-                }, 3000);
+                showNotification('Спасибо! Ваш отзыв добавлен', 'success');
             } else {
-                alert(newReview.error || 'Ошибка при добавлении отзыва');
+                showNotification(newReview.error || 'Ошибка при добавлении отзыва', 'error');
             }
         } catch (error) {
-            console.error('Ошибка:', error);
-            alert('Ошибка сервера');
+            showNotification('Ошибка сервера', 'error');
         }
     });
 

@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/register.css">
+  <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="/js/notifications.js"></script>
   <title>Регистрация</title>
 </head>
 
@@ -64,16 +66,15 @@
       const confirmPassword = document.getElementById('confirmPassword').value;
 
       if (password !== confirmPassword) {
-        alert('Пароли не совпадают');
+        showNotification('Пароли не совпадают', 'error');
         return;
       }
 
       if (password.length < 6) {
-        alert('Пароль должен содержать минимум 6 символов');
+        showNotification('Пароль должен содержать минимум 6 символов', 'error');
         return;
       }
 
-      console.log('Отправка данных на регистрацию:', { name, email, password });
       try {
         const response = await fetch('http://localhost:3000/api/users/register', {
           method: 'POST',
@@ -81,21 +82,19 @@
           body: JSON.stringify({ name, email, password }),
         });
         const data = await response.json();
-        console.log('Ответ от сервера:', data);
         if (response.ok) {
-          alert('Регистрация успешна! Войдите в аккаунт.');
-          window.location.href = '/pro';
+          showNotification('Регистрация успешна! Войдите в аккаунт.', 'success');
+          setTimeout(() => window.location.href = '/pro', 1000);
         } else {
           if (data.errors && data.errors.length > 0) {
             const errorMessages = data.errors.map(error => error.msg).join('\n');
-            alert(errorMessages);
+            showNotification(errorMessages, 'error');
           } else {
-            alert(data.error || 'Ошибка при регистрации');
+            showNotification(data.error || 'Ошибка при регистрации', 'error');
           }
         }
       } catch (error) {
-        console.error('Ошибка:', error);
-        alert('Ошибка сервера');
+        showNotification('Ошибка сервера', 'error');
       }
     });
   </script>
