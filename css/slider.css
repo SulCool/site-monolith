@@ -335,6 +335,27 @@ background-color: #f5f5f5;
     animation: fadeOut 0.3s ease forwards;
 }
 
+.all-reviews-link {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background 0.3s;
+    justify-content: center;
+    text-align: center;
+}
+
+.all-reviews-link:hover {
+    background: #7fbf94;
+}
+.reviews-section {
+    text-align: center;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }

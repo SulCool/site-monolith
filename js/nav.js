@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="/">Главная</a>
                     <a href="/order">Заказ</a>
                     <a href="/catalog">Категории товара</a>
+                    <a href="/reviews">Отзывы</a>
                     <a href="/register">Регистрация</a>
                     <a href="/profile">Профиль</a>
                 `;
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="/">Главная</a>
                     <a href="/order">Заказ</a>
                     <a href="/catalog">Категории товара</a>
+                    <a href="/reviews">Отзывы</a>
                     <a href="/register">Регистрация</a>
                     <a href="/pro">Вход</a>
                 `;
@@ -31,11 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <a href="/">Главная</a>
                 <a href="/order">Заказ</a>
                 <a href="/catalog">Категории товара</a>
+                <a href="/reviews">Отзывы</a>
                 <a href="/register">Регистрация</a>
                 <a href="/pro">Вход</a>
             `;
         }
     }
 
-    updateNavigation();
+    if (nav) {
+        updateNavigation();
+    }
 });

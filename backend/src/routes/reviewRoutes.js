@@ -29,7 +29,7 @@ router.post('/', authenticateToken, async (req, res) => {
                 deliveryType,
                 company,
             },
-            include: { user: true }, 
+            include: { user: true },
         });
         res.status(201).json(review);
     } catch (error) {
@@ -39,10 +39,18 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    const reviews = await prisma.review.findMany({
-        include: { user: true },
-    });
-    res.json(reviews);
+    const { limit } = req.query;
+    try {
+        const reviews = await prisma.review.findMany({
+            take: limit ? parseInt(limit) : undefined,
+            orderBy: { createdAt: 'desc' },
+            include: { user: true },
+        });
+        res.json(reviews);
+    } catch (error) {
+        console.error('Ошибка при загрузке отзывов:', error);
+        res.status(500).json({ error: 'Ошибка при загрузке отзывов' });
+    }
 });
 
 module.exports = router;

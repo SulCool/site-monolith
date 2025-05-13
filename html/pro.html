@@ -22,6 +22,7 @@
             <a href="/">Главная</a>
             <a href="/order">Заказ</a>
             <a href="/catalog">Категории товара</a>
+            <a href="/reviews">Отзывы</a>
             <a href="/register">Регистрация</a>
             <a href="/pro">Вход</a>
         </nav>
@@ -55,19 +56,6 @@
         </div>
     </div>
     <script>
-        fetch('http://localhost:3000/api/users/profile', {
-            credentials: 'include', 
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (response.ok) {
-                    window.location.href = '/profile';
-                }
-            })
-            .catch(error => {
-                console.log('Пользователь не авторизован:', error);
-            });
-
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -78,7 +66,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }),
-                    credentials: 'include', 
+                    credentials: 'include',
                 });
                 const data = await response.json();
                 console.log('Ответ от сервера:', data);

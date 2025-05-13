@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Монолит - Доставка бетона</title>
+    <title>Отзывы - Монолит</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/slider.css">
+    <link rel="stylesheet" href="/css/reviews.css">
 </head>
 <body>
     <header>
@@ -28,70 +29,10 @@
         </nav>
     </header>
 
-    <section class="hero">
-        <h1>ООО Монолит</h1>
-    </section>
-
-    <section class="company-section">
-        <div class="company-content">
-            <h1>Делаем надёжно, работаем на результат!</h1>
-            <div class="company-item">
-                <h2>О компании</h2>
-                <p>Мы — профессиональная компания по доставке бетона, которая зарекомендовала себя как надежный партнер
-                    в строительстве. Наша миссия — обеспечить наших клиентов высококачественным бетоном и безупречным
-                    обслуживанием.</p>
-            </div>
-            <div class="company-item">
-                <h2>Наша история</h2>
-                <p>С момента основания мы стремились стать лидерами в области бетона. Накопленный опыт и современные
-                    технологии позволяют нам предлагать широкий ассортимент бетонных смесей, соответствующих
-                    международным стандартам.</p>
-            </div>
-        </div>
-        <div class="company-image">
-            <img src="/assets/betonnye-raboty.jpg" alt="Наша команда на стройке">
-        </div>
-    </section>
-
-    <section class="why-choose-us">
-        <h1>Почему выбирают нас</h1>
-        <div class="advantages">
-            <div class="advantage-card">
-                <img src="/assets/качество3.png" alt="Качество">
-                <h3>Качество</h3>
-                <p>Наш бетон проходит строгий контроль качества и соответствует международным стандартам, обеспечивая
-                    долговечность и надежность ваших конструкций.</p>
-            </div>
-            <div class="advantage-card">
-                <img src="/assets/доставка2.png" alt="Доставка">
-                <h3>Скорость доставки</h3>
-                <p>Мы предлагаем оперативную доставку, включая ночные и срочные варианты, чтобы ваш проект не
-                    останавливался ни на минуту.</p>
-            </div>
-            <div class="advantage-card">
-                <img src="/assets/индивид2.png" alt="Индивидуальный подход">
-                <h3>Индивидуальный подход</h3>
-                <p>Наши специалисты подберут оптимальный состав бетона и график доставки, учитывая уникальные
-                    потребности вашего проекта.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="reviews-section">
-        <h1>Что говорят наши клиенты</h1>
-        <p class="intro-text">Присоединяйтесь к тысячам довольных клиентов и оставьте свой отзыв</p>
-
-        <div class="slider-container">
-            <div id="slides-container" class="slides-container"></div>
-            <div class="dots"></div>
-            <button id="prev-btn" class="nav-arrow prev-btn">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button id="next-btn" class="nav-arrow next-btn">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-
+    <section class="all-reviews-section">
+        <h1>Все отзывы наших клиентов</h1>
+        <p class="intro-text">Читайте, что говорят о нас, и делитесь своим опытом</p>
+        <div id="reviews-container" class="reviews-container"></div>
 
         <div class="review-form-container">
             <div class="form-sidebar">
@@ -158,28 +99,6 @@
                     </button>
                 </form>
             </div>
-            
-        </div>
-                <a href="/reviews" class="all-reviews-link">Посмотреть все отзывы</a>
-    </section>
-
-    <section class="contacts-section">
-        <h1>Свяжитесь с нами</h1>
-        <div class="contact-container">
-            <div class="map-placeholder">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d838.9770940074106!2d40.96527357939272!3d56.963382802369374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z0JzQvtC90L7Qu9C40YI!5e1!3m2!1sru!2sfr!4v1747000705513!5m2!1sru!2sfr"
-                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-            <div class="contact-form">
-                <form>
-                    <input type="text" placeholder="Ваше имя" required>
-                    <input type="email" placeholder="Ваш email" required>
-                    <textarea placeholder="Ваше сообщение" required></textarea>
-                    <button type="submit">Отправить</button>
-                </form>
-            </div>
         </div>
     </section>
 
@@ -209,7 +128,7 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <script src="/js/slider.js"></script>
     <script src="/js/nav.js"></script>
+    <script src="/js/reviews.js"></script>
 </body>
 </html>

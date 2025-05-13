@@ -1,33 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const slidesContainer = document.getElementById('slides-container');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    let currentIndex = 0;
-    let slideInterval;
+    const reviewsContainer = document.getElementById('reviews-container');
+    const reviewForm = document.getElementById('review-form');
+    const ratingStars = document.querySelectorAll('.rating-input i');
+    const ratingInput = document.getElementById('rating');
 
     async function loadReviews() {
         try {
-            const response = await fetch('http://localhost:3000/api/reviews?limit=4', {
+            const response = await fetch('http://localhost:3000/api/reviews', {
                 credentials: 'include',
             });
             const reviews = await response.json();
-            slidesContainer.innerHTML = '';
-            const dotsContainer = document.querySelector('.dots');
-            dotsContainer.innerHTML = '';
+            reviewsContainer.innerHTML = '';
 
             if (reviews.length === 0) {
-                slidesContainer.innerHTML = '<p>Отзывов пока нет.</p>';
+                reviewsContainer.innerHTML = '<p>Отзывов пока нет.</p>';
                 return;
             }
 
-            reviews.forEach((review, index) => {
-                const slide = document.createElement('div');
-                slide.className = `slide ${index === 0 ? 'active' : ''}`;
+            reviews.forEach(review => {
+                const reviewCard = document.createElement('div');
+                reviewCard.className = 'review-card';
                 const concreteInfo =
                     review.concreteType && review.volume > 0 ? `Бетон ${review.concreteType} • ${review.volume} м³` : '';
                 const deliveryTag = review.deliveryType ? `${review.deliveryType}` : '';
 
-                slide.innerHTML = `
+                reviewCard.innerHTML = `
                     <div class="user-info">
                         <div class="avatar"><i class="fas fa-user"></i></div>
                         <div>
@@ -53,67 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
 
-                slidesContainer.appendChild(slide);
-
-                const dot = document.createElement('button');
-                dot.className = `dot ${index === 0 ? 'active' : ''}`;
-                dot.dataset.index = index;
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
+                reviewsContainer.appendChild(reviewCard);
             });
-
-            const updatedSlides = document.querySelectorAll('.slide');
-            const updatedDots = document.querySelectorAll('.dot');
-            if (updatedSlides.length > 0) {
-                currentIndex = 0;
-                updatedSlides[currentIndex].classList.add('active');
-                updatedDots[currentIndex].classList.add('active');
-                startSlider();
-            }
         } catch (error) {
             console.error('Ошибка загрузки отзывов:', error);
-            slidesContainer.innerHTML = '<p>Ошибка загрузки отзывов.</p>';
+            reviewsContainer.innerHTML = '<p>Ошибка загрузки отзывов.</p>';
         }
     }
-
-    function startSlider() {
-        clearInterval(slideInterval);
-        const slides = document.querySelectorAll('.slide');
-        if (slides.length > 0) {
-            slideInterval = setInterval(() => {
-                goToSlide((currentIndex + 1) % slides.length);
-            }, 6000);
-        }
-    }
-
-    function goToSlide(index) {
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.dot');
-        if (index === currentIndex || slides.length === 0) return;
-        slides[currentIndex].classList.remove('active');
-        dots[currentIndex].classList.remove('active');
-        currentIndex = index;
-        slides[currentIndex].classList.add('active');
-        dots[currentIndex].classList.add('active');
-        clearInterval(slideInterval);
-        startSlider();
-    }
-
-    slidesContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
-    slidesContainer.addEventListener('mouseleave', startSlider);
-
-    prevBtn.addEventListener('click', () => {
-        const slides = document.querySelectorAll('.slide');
-        goToSlide((currentIndex - 1 + slides.length) % slides.length);
-    });
-
-    nextBtn.addEventListener('click', () => {
-        const slides = document.querySelectorAll('.slide');
-        goToSlide((currentIndex + 1) % slides.length);
-    });
-
-    const ratingStars = document.querySelectorAll('.rating-input i');
-    const ratingInput = document.getElementById('rating');
 
     ratingStars.forEach(star => {
         star.addEventListener('mouseenter', () => {
@@ -139,8 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
-
-    const reviewForm = document.getElementById('review-form');
 
     reviewForm.addEventListener('submit', async (e) => {
         e.preventDefault();
