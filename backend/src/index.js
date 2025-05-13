@@ -25,10 +25,10 @@ app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
-                'script-src': ["'self'", "'unsafe-inline'", 'http://localhost:3000'],
+                'script-src': ["'self'", "'unsafe-inline'", 'http://localhost:3000', 'https://cdn.tailwindcss.com'],
                 'script-src-attr': ["'self'", "'unsafe-inline'"],
                 'default-src': ["'self'"],
-                'style-src': ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://fonts.googleapis.com'],
+                'style-src': ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com', 'https://fonts.googleapis.com'],
                 'font-src': ['https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
                 'frame-src': ['https://www.google.com'],
                 'img-src': ["'self'", 'data:', 'https:'],
