@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-const JWT_SECRET = ''; 
+const JWT_SECRET = process.env.JWT_SECRET; 
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];

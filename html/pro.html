@@ -45,7 +45,7 @@
                             <input type="checkbox" id="remember">
                             <p>Запомнить меня</p>
                         </label>
-                        <a href="#">Забыли пароль?</a>
+                        <a href="/reset-password">Забыли пароль?</a>
                     </div>
                     <button type="submit">Войти</button>
                     <div class="register">
@@ -53,67 +53,14 @@
                     </div>
                 </form>
             </div>
-            <div id="profileSection" style="display: none;">
-                <h2>Профиль</h2>
-                <div class="profile-info">
-                    <p><strong>Имя:</strong> <span id="userName"></span></p>
-                    <p><strong>Email:</strong> <span id="userEmail"></span></p>
-                </div>
-                <button class="logout-btn" onclick="logout()">Выйти</button>
-                <h3>Ваши заказы</h3>
-                <div id="orders" class="orders-list"></div>
-            </div>
         </div>
     </div>
     <script>
         const token = localStorage.getItem('token');
         console.log('Токен из localStorage:', token);
 
-        async function loadProfile() {
-            if (!token) {
-                console.log('Токен отсутствует, показываем форму входа');
-                document.getElementById('loginSection').style.display = 'block';
-                document.getElementById('profileSection').style.display = 'none';
-                return;
-            }
-
-            try {
-                console.log('Отправляем запрос на /api/users/profile с токеном:', token);
-                const response = await fetch('http://localhost:3000/api/users/profile', {
-                    headers: { 'Authorization': `Bearer ${token}` },
-                });
-                const data = await response.json();
-                console.log('Ответ от сервера:', data);
-                if (response.ok) {
-                    document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('profileSection').style.display = 'block';
-                    document.getElementById('userName').textContent = data.user.name || 'Гость';
-                    document.getElementById('userEmail').textContent = data.user.email || 'Не указан';
-                    const ordersDiv = document.getElementById('orders');
-                    if (data.user.orders && data.user.orders.length === 0) {
-                        ordersDiv.innerHTML = '<p>У вас пока нет заказов.</p>';
-                    } else if (data.user.orders) {
-                        ordersDiv.innerHTML = data.user.orders.map(order => `
-                            <div class="order-item">
-                                <p>Тип бетона: ${order.concreteType}</p>
-                                <p>Объём: ${order.volume} м³</p>
-                                <p>Доставка: ${order.deliveryType}</p>
-                                <p>Цена: ${order.price} руб.</p>
-                                <p>Статус: ${order.status}</p>
-                            </div>
-                        `).join('');
-                    }
-                    loadReviews();
-                } else {
-                    console.log('Ошибка при загрузке профиля:', data.error);
-                    localStorage.removeItem('token');
-                    document.getElementById('loginSection').style.display = 'block';
-                    document.getElementById('profileSection').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки профиля:', error);
-                alert('Ошибка загрузки профиля');
-            }
+        if (token) {
+            window.location.href = '/profile'; 
         }
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -133,7 +80,7 @@
                     localStorage.setItem('token', data.token);
                     console.log('Токен сохранён:', data.token);
                     alert('Вход успешен!');
-                    window.location.reload(); 
+                    window.location.href = '/profile'; 
                 } else {
                     console.log('Ошибка входа:', data.error);
                     alert(data.error);
@@ -143,64 +90,6 @@
                 alert('Ошибка при входе');
             }
         });
-
-        async function submitReview() {
-            const reviewText = document.getElementById('reviewText').value;
-            if (!reviewText) {
-                alert('Введите текст отзыва');
-                return;
-            }
-
-            const token = localStorage.getItem('token');
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-
-            try {
-                const response = await fetch('http://localhost:3000/api/reviews', {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({ text: reviewText }),
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    alert('Отзыв отправлен!');
-                    document.getElementById('reviewText').value = '';
-                    loadReviews();
-                } else {
-                    alert(data.error || 'Ошибка при отправке отзыва');
-                }
-            } catch (error) {
-                alert('Ошибка сервера');
-            }
-        }
-
-        async function loadReviews() {
-            try {
-                const response = await fetch('http://localhost:3000/api/reviews');
-                const data = await response.json();
-                if (response.ok) {
-                    const reviewsList = document.getElementById('reviewsList');
-                    reviewsList.innerHTML = data.map(review => `
-                        <div class="review-item">
-                            <p><strong>${review.name || 'Аноним'}</strong>: ${review.text}</p>
-                        </div>
-                    `).join('');
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки отзывов:', error);
-            }
-        }
-
-        function logout() {
-            console.log('Выход из аккаунта, удаляем токен');
-            localStorage.removeItem('token');
-            window.location.reload(); 
-        }
-
-        if (token) {
-            console.log('Токен найден, загружаем профиль');
-            loadProfile();
-        }
     </script>
 </body>
 </html>
