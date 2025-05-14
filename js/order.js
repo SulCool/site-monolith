@@ -89,7 +89,7 @@ async function submitOrder() {
         const data = await response.json();
         console.log('Ответ от сервера:', { status: response.status, data });
         if (response.ok) {
-            window.notify.show('Заказ успешно отправлен!', 'success');
+            window.notify.show(`Заказ успешно отправлен! Статус: ${data.order.statusDisplay}`, 'success');
             document.getElementById('orderForm').reset();
             if (selectedCard) selectedCard.classList.remove('selected');
             selectedCard = null;

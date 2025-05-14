@@ -57,7 +57,7 @@
                                 <p>Объём: ${order.volume || 0} м³</p>
                                 <p>Доставка: ${order.deliveryType || 'Не указано'}</p>
                                 <p>Цена: ${order.price || 0} руб.</p>
-                                <p>Статус: ${order.status}</p>
+                                <p>Статус: ${order.statusDisplay}</p>
                                 <div class="mt-2">
                                     <select id="status-${order.id}" class="border rounded-lg px-2 py-1">
                                         <option value="NEW" ${order.status === 'NEW' ? 'selected' : ''}>Новый</option>

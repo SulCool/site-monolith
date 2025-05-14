@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/pro.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/js/notifications.js" defer></script>
     <title>Профиль</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/notifications.js" defer></script>
 </head>
-<body>
-    <div class="background"></div>
+<body class="bg-gray-50 min-h-screen">
     <header>
         <div class="logo">
             <img src="/assets/цемент.png" alt="Логотип Монолит">
@@ -25,78 +24,69 @@
             <a href="/order">Заказ</a>
             <a href="/catalog">Категории товара</a>
             <a href="/reviews">Отзывы</a>
-            <a href="/register">Регистрация</a>
-            <a href="/pro">Вход</a>
+            <a href="/profile">Профиль</a>
         </nav>
     </header>
-    <div class="content">
-        <div class="wrapper">
-            <div id="profileSection">
-                <h2>Профиль</h2>
-                <div class="profile-info">
-                    <p><strong>Имя:</strong> <span id="userName"></span></p>
-                    <p><strong>Email:</strong> <span id="userEmail"></span></p>
-                </div>
-                <button class="logout-btn" onclick="logout()">Выйти</button>
-                <h3>Ваши заказы</h3>
-                <div id="orders" class="orders-list"></div>
-            </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Профиль</h1>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Ваши заказы</h2>
+            <div id="orders" class="space-y-4"></div>
         </div>
     </div>
+
+    <script src="/js/nav.js"></script>
     <script>
-        async function loadProfile() {
+        async function loadProfileAndOrders() {
             try {
-                console.log('Отправляем запрос на /api/users/profile');
-                const response = await fetch('http://localhost:3000/api/users/profile', {
+                const profileResponse = await fetch('http://localhost:3000/api/users/profile', {
                     credentials: 'include',
                 });
-                const data = await response.json();
-                console.log('Ответ от сервера:', data);
-                if (response.ok) {
-                    document.getElementById('userName').textContent = data.user.name || 'Гость';
-                    document.getElementById('userEmail').textContent = data.user.email || 'Не указан';
+                const profileData = await profileResponse.json();
+                if (!profileResponse.ok) {
+                    window.notify.show(profileData.error || 'Ошибка загрузки профиля', 'error');
+                    if (profileResponse.status === 401 || profileResponse.status === 403) {
+                        window.location.href = '/pro';
+                    }
+                    return;
+                }
+
+                const userId = profileData.user.id;
+
+                const ordersResponse = await fetch(`http://localhost:3000/api/orders/user/${userId}`, {
+                    credentials: 'include',
+                });
+                const orders = await ordersResponse.json();
+                if (ordersResponse.ok) {
                     const ordersDiv = document.getElementById('orders');
-                    if (data.user.orders && data.user.orders.length === 0) {
-                        ordersDiv.innerHTML = '<p>У вас пока нет заказов.</p>';
-                    } else if (data.user.orders) {
-                        ordersDiv.innerHTML = data.user.orders.map(order => `
-                            <div class="order-item">
-                                <p>Тип бетона: ${order.concreteType}</p>
-                                <p>Объём: ${order.volume} м³</p>
-                                <p>Доставка: ${order.deliveryType}</p>
-                                <p>Цена: ${order.price} руб.</p>
-                                <p>Статус: ${order.status}</p>
+                    if (orders.length === 0) {
+                        ordersDiv.innerHTML = '<p class="text-gray-600">У вас нет заказов.</p>';
+                    } else {
+                        ordersDiv.innerHTML = orders.map(order => `
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <p><strong>Заказ #${order.id}</strong></p>
+                                <p>Тип бетона: ${order.concreteType || 'Не указано'}</p>
+                                <p>Объём: ${order.volume || 0} м³</p>
+                                <p>Доставка: ${order.deliveryType || 'Не указано'}</p>
+                                <p>Цена: ${order.price || 0} руб.</p>
+                                <p>Статус: ${order.statusDisplay}</p>
                             </div>
                         `).join('');
                     }
                 } else {
-                    console.log('Ошибка при загрузке профиля:', data.error);
-                    window.location.href = '/pro';
+                    window.notify.show(orders.error || 'Ошибка загрузки заказов', 'error');
+                    if (ordersResponse.status === 401 || ordersResponse.status === 403) {
+                        window.location.href = '/pro';
+                    }
                 }
             } catch (error) {
-                console.error('Ошибка загрузки профиля:', error);
-                alert('Ошибка загрузки профиля');
-                window.location.href = '/pro';
+                console.error('Ошибка загрузки данных:', error);
+                window.notify.show('Ошибка сервера', 'error');
             }
         }
 
-        async function logout() {
-            try {
-                const response = await fetch('http://localhost:3000/api/users/logout', {
-                    method: 'POST',
-                    credentials: 'include',
-                });
-                if (response.ok) {
-                    console.log('Выход из аккаунта успешен');
-                    window.location.href = '/pro';
-                }
-            } catch (error) {
-                console.error('Ошибка при выходе:', error);
-            }
-        }
-
-        loadProfile();
+        document.addEventListener('DOMContentLoaded', loadProfileAndOrders);
     </script>
-    <script src="/js/nav.js"></script>
 </body>
 </html>

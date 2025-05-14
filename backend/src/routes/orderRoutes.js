@@ -8,6 +8,14 @@ const prisma = new PrismaClient();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const statusTranslations = {
+  NEW: 'Новый',
+  PROCESSING: 'В обработке',
+  SHIPPED: 'Отправлен',
+  DELIVERED: 'Доставлен',
+  CANCELLED: 'Отменён'
+};
+
 const authenticateToken = (req, res, next) => {
     const token = req.cookies.token;
     console.log('Получен токен из cookies:', token);
@@ -66,7 +74,13 @@ router.post('/', authenticateToken, async (req, res) => {
             },
         });
         console.log('Заказ успешно создан:', order);
-        res.status(201).json({ message: 'Заказ создан', order });
+        res.status(201).json({ 
+            message: 'Заказ создан', 
+            order: {
+                ...order,
+                statusDisplay: statusTranslations[order.status]
+            }
+        });
     } catch (error) {
         console.error('Ошибка при создании заказа:', {
             message: error.message,
@@ -83,10 +97,20 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
     if (parseInt(userId) !== req.user.id) {
         return res.status(403).json({ error: 'Доступ запрещён' });
     }
-    const orders = await prisma.order.findMany({
-        where: { userId: parseInt(userId) },
-    });
-    res.json(orders);
+    try {
+        const orders = await prisma.order.findMany({
+            where: { userId: parseInt(userId) },
+        });
+        // Добавляем перевод статуса для каждого заказа
+        const ordersWithTranslation = orders.map(order => ({
+            ...order,
+            statusDisplay: statusTranslations[order.status]
+        }));
+        res.json(ordersWithTranslation);
+    } catch (error) {
+        console.error('Ошибка при загрузке заказов:', error);
+        res.status(500).json({ error: 'Ошибка при загрузке заказов' });
+    }
 });
 
 router.get('/admin', authenticateToken, isAdmin, async (req, res) => {
@@ -95,7 +119,11 @@ router.get('/admin', authenticateToken, isAdmin, async (req, res) => {
             include: { user: true },
             orderBy: { createdAt: 'desc' },
         });
-        res.json({ orders });
+        const ordersWithTranslation = orders.map(order => ({
+            ...order,
+            statusDisplay: statusTranslations[order.status]
+        }));
+        res.json({ orders: ordersWithTranslation });
     } catch (error) {
         console.error('Ошибка при загрузке заказов:', error);
         res.status(500).json({ error: 'Ошибка при загрузке заказов' });
@@ -119,7 +147,13 @@ router.patch('/:id/status', authenticateToken, isAdmin, async (req, res) => {
             include: { user: true },
         });
         console.log('Статус заказа обновлён:', order);
-        res.json({ message: 'Статус заказа обновлён', order });
+        res.json({ 
+            message: 'Статус заказа обновлён', 
+            order: {
+                ...order,
+                statusDisplay: statusTranslations[order.status]
+            }
+        });
     } catch (error) {
         console.error('Ошибка при обновлении статуса:', error);
         res.status(400).json({ error: `Ошибка при обновлении статуса: ${error.message}` });
