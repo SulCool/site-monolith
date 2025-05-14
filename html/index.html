@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="/css/slider.css">
     <script src="/js/notifications.js" defer></script>
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -19,13 +21,15 @@
             <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
             <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
         </div>
-        <nav>
+        <nav id="nav-menu">
             <a href="/">Главная</a>
             <a href="/order">Заказ</a>
             <a href="/catalog">Категории товара</a>
             <a href="/reviews">Отзывы</a>
-            <a href="/register">Регистрация</a>
-            <a href="/pro">Вход</a>
+            <a href="/profile" class="hidden">Профиль</a>
+            <a href="/register" class="hidden">Регистрация</a>
+            <a href="/admin" id="admin-link" class="hidden">Админ-панель</a>
+            <a href="#" id="logout-link" class="hidden">Выйти</a>
         </nav>
     </header>
 
@@ -208,8 +212,8 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <script src="/js/notifications.js"></script>
     <script src="/js/slider.js"></script>
     <script src="/js/nav.js"></script>
 </body>
+
 </html>

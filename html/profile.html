@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/notifications.js" defer></script>
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <header>
         <div class="logo">
@@ -19,20 +21,22 @@
             <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
             <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
         </div>
-        <nav>
+        <nav id="nav-menu">
             <a href="/">Главная</a>
             <a href="/order">Заказ</a>
             <a href="/catalog">Категории товара</a>
             <a href="/reviews">Отзывы</a>
-            <a href="/profile">Профиль</a>
+            <a href="/profile" class="hidden">Профиль</a>
+            <a href="/register" class="hidden">Регистрация</a>
+            <a href="/admin" id="admin-link" class="hidden">Админ-панель</a>
+            <a href="#" id="logout-link" class="hidden">Выйти</a>
         </nav>
     </header>
 
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <div class="bg-white rounded-xl shadow-lg p-8">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">Профиль</h1>
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Ваши заказы</h2>
-            <div id="orders" class="space-y-4"></div>
+            <div id="profile-content"></div>
         </div>
     </div>
 
@@ -53,31 +57,44 @@
                 }
 
                 const userId = profileData.user.id;
+                const userRole = profileData.user.role;
+                const profileContent = document.getElementById('profile-content');
 
-                const ordersResponse = await fetch(`http://localhost:3000/api/orders/user/${userId}`, {
-                    credentials: 'include',
-                });
-                const orders = await ordersResponse.json();
-                if (ordersResponse.ok) {
-                    const ordersDiv = document.getElementById('orders');
-                    if (orders.length === 0) {
-                        ordersDiv.innerHTML = '<p class="text-gray-600">У вас нет заказов.</p>';
-                    } else {
-                        ordersDiv.innerHTML = orders.map(order => `
-                            <div class="border border-gray-200 rounded-lg p-4">
-                                <p><strong>Заказ #${order.id}</strong></p>
-                                <p>Тип бетона: ${order.concreteType || 'Не указано'}</p>
-                                <p>Объём: ${order.volume || 0} м³</p>
-                                <p>Доставка: ${order.deliveryType || 'Не указано'}</p>
-                                <p>Цена: ${order.price || 0} руб.</p>
-                                <p>Статус: ${order.statusDisplay}</p>
-                            </div>
-                        `).join('');
-                    }
+                if (userRole === 'ADMIN') {
+                    profileContent.innerHTML = `
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Панель администратора</h2>
+                        <p class="text-gray-600">Управляйте заказами в <a href="/admin" class="text-blue-600 hover:underline">админ-панели</a>.</p>
+                    `;
                 } else {
-                    window.notify.show(orders.error || 'Ошибка загрузки заказов', 'error');
-                    if (ordersResponse.status === 401 || ordersResponse.status === 403) {
-                        window.location.href = '/pro';
+                    profileContent.innerHTML = `
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Ваши заказы</h2>
+                        <div id="orders" class="space-y-4"></div>
+                    `;
+                    const ordersResponse = await fetch(`http://localhost:3000/api/orders/user/${userId}`, {
+                        credentials: 'include',
+                    });
+                    const orders = await ordersResponse.json();
+                    if (ordersResponse.ok) {
+                        const ordersDiv = document.getElementById('orders');
+                        if (orders.length === 0) {
+                            ordersDiv.innerHTML = '<p class="text-gray-600">У вас нет заказов.</p>';
+                        } else {
+                            ordersDiv.innerHTML = orders.map(order => `
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <p><strong>Заказ #${order.id}</strong></p>
+                                    <p>Тип бетона: ${order.concreteType || 'Не указано'}</p>
+                                    <p>Объём: ${order.volume || 0} м³</p>
+                                    <p>Доставка: ${order.deliveryType || 'Не указано'}</p>
+                                    <p>Цена: ${order.price || 0} руб.</p>
+                                    <p>Статус: ${order.statusDisplay}</p>
+                                </div>
+                            `).join('');
+                        }
+                    } else {
+                        window.notify.show(orders.error || 'Ошибка загрузки заказов', 'error');
+                        if (ordersResponse.status === 401 || ordersResponse.status === 403) {
+                            window.location.href = '/pro';
+                        }
                     }
                 }
             } catch (error) {
@@ -89,4 +106,5 @@
         document.addEventListener('DOMContentLoaded', loadProfileAndOrders);
     </script>
 </body>
+
 </html>

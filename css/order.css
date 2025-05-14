@@ -110,6 +110,9 @@ nav a:hover {
     color: #fff;
 }
 
+.hidden {
+    display: none !important;
+}
 @media (max-width: 768px) {
     header {
         flex-direction: column;

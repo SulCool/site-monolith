@@ -457,6 +457,10 @@ footer {
     font-size: 20px;
 }
 
+.hidden {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
     header {
         flex-direction: column;

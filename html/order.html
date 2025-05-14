@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <script src="/js/notifications.js" defer></script>
     <script src="/js/order.js" defer></script>
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <header>
         <div class="logo">
@@ -21,12 +23,15 @@
             <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
             <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
         </div>
-        <nav>
+        <nav id="nav-menu">
             <a href="/">Главная</a>
             <a href="/order">Заказ</a>
             <a href="/catalog">Категории товара</a>
-            <a href="/register">Регистрация</a>
-            <a href="/pro">Вход</a>
+            <a href="/reviews">Отзывы</a>
+            <a href="/profile" class="hidden">Профиль</a>
+            <a href="/register" class="hidden">Регистрация</a>
+            <a href="/admin" id="admin-link" class="hidden">Админ-панель</a>
+            <a href="#" id="logout-link" class="hidden">Выйти</a>
         </nav>
     </header>
 
@@ -43,12 +48,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="p-8">
                 <form id="orderForm" class="space-y-6">
                     <div class="space-y-4">
                         <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">Личные данные</h2>
-                        
+
                         <div>
                             <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">ФИО</label>
                             <div class="relative">
@@ -60,9 +65,10 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Номер телефона</label>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Номер
+                                телефона</label>
                             <div class="relative">
                                 <input type="tel" id="phone" name="phone" required
                                     class="input-highlight w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]"
@@ -72,9 +78,10 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
-                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес доставки</label>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес
+                                доставки</label>
                             <div class="relative">
                                 <textarea id="address" name="address" rows="2" required
                                     class="input-highlight w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]"
@@ -85,15 +92,17 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="space-y-4">
                         <h2 class="text-xl font-semibold text-gray-800 border-b pb-2">Выбор бетона</h2>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M100', 3200)">
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M100', 3200)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M100</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2">Для подготовительных работ, фундаментов</p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -101,11 +110,13 @@
                                     <span class="font-bold text-[#7fbf94]">3 200 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M200', 3500)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M200', 3500)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M200</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2">Для фундаментов, полов, дорожек</p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -113,11 +124,13 @@
                                     <span class="font-bold text-[#7fbf94]">3 500 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M300', 3800)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M300', 3800)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M300</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2">Для монолитных стен, перекрытий</p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -125,11 +138,13 @@
                                     <span class="font-bold text-[#7fbf94]">3 800 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M350', 6600)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M350', 6600)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M350</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -137,11 +152,13 @@
                                     <span class="font-bold text-[#7fbf94]">6 600 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M400', 7300)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M400', 7300)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M400</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -149,11 +166,13 @@
                                     <span class="font-bold text-[#7fbf94]">7 300 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M450', 8500)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M450', 8500)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M450</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -161,11 +180,13 @@
                                     <span class="font-bold text-[#7fbf94]">8 500 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('M500', 9100)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('M500', 9100)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">M500</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -173,11 +194,13 @@
                                     <span class="font-bold text-[#7fbf94]">9 100 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W2', 3000)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W2', 3000)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W2</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -185,11 +208,13 @@
                                     <span class="font-bold text-[#7fbf94]">3 000 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W4', 4500)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W4', 4500)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W4</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -197,11 +222,13 @@
                                     <span class="font-bold text-[#7fbf94]">4 500 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W6', 5300)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W6', 5300)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W6</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -209,11 +236,13 @@
                                     <span class="font-bold text-[#7fbf94]">5 300 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W8', 5800)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W8', 5800)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W8</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -221,11 +250,13 @@
                                     <span class="font-bold text-[#7fbf94]">5 800 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W10', 6700)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W10', 6700)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W10</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -233,11 +264,13 @@
                                     <span class="font-bold text-[#7fbf94]">6 700 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W15', 7200)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W15', 7200)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W15</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -245,11 +278,13 @@
                                     <span class="font-bold text-[#7fbf94]">7 200 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('W20', 8700)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('W20', 8700)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">W20</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -257,11 +292,13 @@
                                     <span class="font-bold text-[#7fbf94]">8 700 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F50', 3200)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F50', 3200)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F50</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -269,11 +306,13 @@
                                     <span class="font-bold text-[#7fbf94]">3 200 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F100', 4100)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F100', 4100)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F100</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -281,11 +320,13 @@
                                     <span class="font-bold text-[#7fbf94]">4 100 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F150', 4800)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F150', 4800)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F150</h3>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Эконом</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -293,11 +334,13 @@
                                     <span class="font-bold text-[#7fbf94]">4 800 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F200', 6100)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F200', 6100)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F200</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -305,11 +348,13 @@
                                     <span class="font-bold text-[#7fbf94]">6 100 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F250', 5300)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F250', 5300)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F250</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -317,11 +362,13 @@
                                     <span class="font-bold text-[#7fbf94]">5 300 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F300', 6900)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F300', 6900)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F300</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -329,11 +376,13 @@
                                     <span class="font-bold text-[#7fbf94]">6 900 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F350', 7500)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F350', 7500)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F350</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Популярный</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -341,11 +390,13 @@
                                     <span class="font-bold text-[#7fbf94]">7 500 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F400', 8200)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F400', 8200)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F400</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -353,11 +404,13 @@
                                     <span class="font-bold text-[#7fbf94]">8 200 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F450', 9100)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F450', 9100)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F450</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -365,11 +418,13 @@
                                     <span class="font-bold text-[#7fbf94]">9 100 ₽/м³</span>
                                 </div>
                             </div>
-                            
-                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400" onclick="selectConcrete('F500', 10500)">
+
+                            <div class="concrete-card bg-white border border-gray-200 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#7fbf94] selected:border-blue-400"
+                                onclick="selectConcrete('F500', 10500)">
                                 <div class="flex justify-between items-start">
                                     <h3 class="font-bold text-lg">F500</h3>
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Премиум</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mt-2"></p>
                                 <div class="mt-4 flex items-center justify-between">
@@ -377,19 +432,23 @@
                                     <span class="font-bold text-[#7fbf94]">10 500 ₽/м³</span>
                                 </div>
                             </div>
-                        </div>              
+                        </div>
                         <input type="hidden" id="concreteType" name="concreteType" value="">
                         <input type="hidden" id="concretePrice" name="concretePrice" value="">
-                        
+
                         <div class="mt-6">
-                            <label for="concreteAmount" class="block text-sm font-medium text-gray-700 mb-1">Количество бетона (м³)</label>
+                            <label for="concreteAmount" class="block text-sm font-medium text-gray-700 mb-1">Количество
+                                бетона (м³)</label>
                             <div class="flex items-center">
-                                <button type="button" onclick="changeAmount(-0.5)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l-lg">
+                                <button type="button" onclick="changeAmount(-0.5)"
+                                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l-lg">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <input type="number" id="concreteAmount" name="concreteAmount" min="0.5" step="0.5" value="1" 
+                                <input type="number" id="concreteAmount" name="concreteAmount" min="0.5" step="0.5"
+                                    value="1"
                                     class="input-highlight w-20 text-center border-t border-b border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]">
-                                <button type="button" onclick="changeAmount(0.5)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r-lg">
+                                <button type="button" onclick="changeAmount(0.5)"
+                                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r-lg">
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 <span class="ml-3 text-gray-600">м³</span>
@@ -397,25 +456,28 @@
                         </div>
 
                         <div>
-                            <label for="deliveryType" class="block text-sm font-medium text-gray-700 mb-1">Тип доставки</label>
-                            <select id="deliveryType" name="deliveryType" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]">
+                            <label for="deliveryType" class="block text-sm font-medium text-gray-700 mb-1">Тип
+                                доставки</label>
+                            <select id="deliveryType" name="deliveryType"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]">
                                 <option value="Стандартная">Стандартная</option>
                                 <option value="Ночная">Ночная</option>
                                 <option value="Срочная">Срочная</option>
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="pt-4">
-                        <button type="button" onclick="showSummary()" class="w-full bg-gray-600 hover:bg-[#6aa57f] text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <button type="button" onclick="showSummary()"
+                            class="w-full bg-gray-600 hover:bg-[#6aa57f] text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
                             Показать заказ
                         </button>
                     </div>
                 </form>
-                
+
                 <div id="orderSummary" class="mt-8 bg-gray-50 border border-gray-200 rounded-xl p-6 hidden">
                     <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">Сводка заказа</h2>
-                    
+
                     <div class="space-y-4">
                         <div class="flex justify-between">
                             <span class="text-gray-600">ФИО:</span>
@@ -447,12 +509,14 @@
                             <span id="summaryTotal" class="text-green-600"></span>
                         </div>
                     </div>
-                    
+
                     <div class="mt-6 flex justify-between">
-                        <button type="button" onclick="hideSummary()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <button type="button" onclick="hideSummary()"
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
                             Изменить
                         </button>
-                        <button type="button" onclick="submitOrder()" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
+                        <button type="button" onclick="submitOrder()"
+                            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
                             Подтвердить заказ <i class="fas fa-check ml-1"></i>
                         </button>
                     </div>
@@ -463,4 +527,5 @@
 
     <script src="/js/nav.js"></script>
 </body>
+
 </html>
