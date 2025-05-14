@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/notifications.js" defer></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header>
+        <div class="logo">
+            <img src="/assets/цемент.png" alt="Логотип Монолит">
+        </div>
+        <div class="contact-info">
+            <p><i class="fas fa-phone"></i> +7 (903) 888-78-11</p>
+            <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
+            <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
+        </div>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/order">Заказ</a>
+            <a href="/catalog">Категории товара</a>
+            <a href="/reviews">Отзывы</a>
+            <a href="/profile">Профиль</a>
+        </nav>
+    </header>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Панель администратора</h1>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Управление заказами</h2>
+            <div id="orders" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <script src="/js/nav.js"></script>
+    <script>
+        async function loadOrders() {
+            try {
+                const response = await fetch('http://localhost:3000/api/orders/admin', {
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const ordersDiv = document.getElementById('orders');
+                    if (data.orders.length === 0) {
+                        ordersDiv.innerHTML = '<p class="text-gray-600">Заказы отсутствуют.</p>';
+                    } else {
+                        ordersDiv.innerHTML = data.orders.map(order => `
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <p><strong>Заказ #${order.id}</strong></p>
+                                <p>Пользователь: ${order.user.name} (${order.user.email})</p>
+                                <p>Тип бетона: ${order.concreteType || 'Не указано'}</p>
+                                <p>Объём: ${order.volume || 0} м³</p>
+                                <p>Доставка: ${order.deliveryType || 'Не указано'}</p>
+                                <p>Цена: ${order.price || 0} руб.</p>
+                                <p>Статус: ${order.status}</p>
+                                <div class="mt-2">
+                                    <select id="status-${order.id}" class="border rounded-lg px-2 py-1">
+                                        <option value="NEW" ${order.status === 'NEW' ? 'selected' : ''}>Новый</option>
+                                        <option value="PROCESSING" ${order.status === 'PROCESSING' ? 'selected' : ''}>В обработке</option>
+                                        <option value="SHIPPED" ${order.status === 'SHIPPED' ? 'selected' : ''}>Отправлен</option>
+                                        <option value="DELIVERED" ${order.status === 'DELIVERED' ? 'selected' : ''}>Доставлен</option>
+                                        <option value="CANCELLED" ${order.status === 'CANCELLED' ? 'selected' : ''}>Отменён</option>
+                                    </select>
+                                    <button onclick="updateOrderStatus(${order.id})" class="ml-2 bg-green-600 text-white px-4 py-1 rounded-lg hover:bg-green-700">
+                                        Сохранить
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    window.notify.show(data.error || 'Ошибка загрузки заказов', 'error');
+                    if (response.status === 401 || response.status === 403) {
+                        window.location.href = '/pro';
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки заказов:', error);
+                window.notify.show('Ошибка сервера', 'error');
+            }
+        }
+
+        async function updateOrderStatus(orderId) {
+            const status = document.getElementById(`status-${orderId}`).value;
+            try {
+                const response = await fetch(`http://localhost:3000/api/orders/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status }),
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    window.notify.show('Статус заказа обновлён!', 'success');
+                    loadOrders();
+                } else {
+                    window.notify.show(data.error || 'Ошибка обновления статуса', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка при обновлении статуса:', error);
+                window.notify.show('Ошибка сервера', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrders);
+    </script>

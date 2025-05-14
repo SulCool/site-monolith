@@ -55,10 +55,10 @@ router.post('/register', [
         console.log('Хешированный пароль:', hashedPassword);
 
         const user = await prisma.user.create({
-            data: { email, password: hashedPassword, name },
+            data: { email, password: hashedPassword, name, role: 'USER' },
         });
         console.log('Пользователь создан:', user);
-        res.status(201).json({ message: 'Пользователь зарегистрирован', user: { id: user.id, email: user.email, name: user.name } });
+        res.status(201).json({ message: 'Пользователь зарегистрирован', user: { id: user.id, email: user.email, name: user.name, role: user.role } });
     } catch (error) {
         console.error('Ошибка при регистрации:', error);
         res.status(500).json({ error: 'Ошибка при регистрации' });
@@ -88,7 +88,7 @@ router.post('/login', [
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) return res.status(401).json({ error: 'Неверный пароль' });
 
-        const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
 
         const maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000;
 
@@ -99,7 +99,7 @@ router.post('/login', [
             sameSite: 'Strict',
         });
 
-        res.json({ message: 'Вход успешен', user: { id: user.id, email: user.email, name: user.name } });
+        res.json({ message: 'Вход успешен', user: { id: user.id, email: user.email, name: user.name, role: user.role } });
     } catch (error) {
         console.error('Ошибка при входе:', error);
         res.status(500).json({ error: 'Ошибка при входе' });
@@ -145,7 +145,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
             include: { orders: true },
         });
         if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
-        res.json({ user: { id: user.id, email: user.email, name: user.name, orders: user.orders } });
+        res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role, orders: user.orders } });
     } catch (error) {
         res.status(500).json({ error: 'Ошибка при загрузке профиля' });
     }

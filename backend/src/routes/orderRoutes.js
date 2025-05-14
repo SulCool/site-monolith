@@ -24,6 +24,20 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+const isAdmin = async (req, res, next) => {
+    try {
+        const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+        if (!user || user.role !== 'ADMIN') {
+            console.error('Доступ запрещён: пользователь не администратор', { userId: req.user.id });
+            return res.status(403).json({ error: 'Доступ запрещён' });
+        }
+        next();
+    } catch (error) {
+        console.error('Ошибка проверки роли администратора:', error);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+};
+
 router.post('/', authenticateToken, async (req, res) => {
     const { concreteType, volume, deliveryType, price, productId } = req.body;
     console.log('Получены данные заказа:', { concreteType, volume, deliveryType, price, productId, userId: req.user.id });
@@ -73,6 +87,43 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
         where: { userId: parseInt(userId) },
     });
     res.json(orders);
+});
+
+router.get('/admin', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const orders = await prisma.order.findMany({
+            include: { user: true },
+            orderBy: { createdAt: 'desc' },
+        });
+        res.json({ orders });
+    } catch (error) {
+        console.error('Ошибка при загрузке заказов:', error);
+        res.status(500).json({ error: 'Ошибка при загрузке заказов' });
+    }
+});
+
+router.patch('/:id/status', authenticateToken, isAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const validStatuses = ['NEW', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+    
+    if (!validStatuses.includes(status)) {
+        console.error('Некорректный статус:', status);
+        return res.status(400).json({ error: 'Некорректный статус заказа' });
+    }
+
+    try {
+        const order = await prisma.order.update({
+            where: { id: parseInt(id) },
+            data: { status },
+            include: { user: true },
+        });
+        console.log('Статус заказа обновлён:', order);
+        res.json({ message: 'Статус заказа обновлён', order });
+    } catch (error) {
+        console.error('Ошибка при обновлении статуса:', error);
+        res.status(400).json({ error: `Ошибка при обновлении статуса: ${error.message}` });
+    }
 });
 
 module.exports = router;

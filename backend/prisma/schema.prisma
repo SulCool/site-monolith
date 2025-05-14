@@ -15,6 +15,7 @@ model User {
     orders    Order[]
     createdAt DateTime @default(now())
     reviews   Review[] @relation("UserToReview")
+    role String @default("USER")
 }
 
 model Product {

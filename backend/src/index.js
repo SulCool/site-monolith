@@ -58,7 +58,7 @@ app.get('/js/notifications.js', (req, res) => {
 
 app.use(express.urlencoded({ extended: true }));
 
-const pages = ['index', 'order', 'catalog', 'register', 'pro', 'slider', 'profile', 'reset-password', 'reset-password-confirm', 'reviews'];
+const pages = ['index', 'order', 'catalog', 'register', 'pro', 'slider', 'profile', 'reset-password', 'reset-password-confirm', 'reviews', 'admin'];
 pages.forEach(page => {
     app.get(`/${page}`, (req, res) => {
         res.sendFile(path.join(__dirname, '../..', 'html', `${page}.html`));

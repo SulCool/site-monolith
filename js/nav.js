@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
+                const isAdmin = data.user.role === 'ADMIN';
                 nav.innerHTML = `
                     <a href="/">Главная</a>
                     <a href="/order">Заказ</a>
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="/reviews">Отзывы</a>
                     <a href="/register">Регистрация</a>
                     <a href="/profile">Профиль</a>
+                    ${isAdmin ? '<a href="/admin">Админка</a>' : ''}
                 `;
             } else {
                 nav.innerHTML = `
