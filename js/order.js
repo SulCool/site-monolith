@@ -1,44 +1,45 @@
+let selectedCard = null;
+
 function selectConcrete(type, price) {
+    if (selectedCard) {
+        selectedCard.classList.remove('selected');
+    }
+    const card = event.target.closest('.concrete-card');
+    card.classList.add('selected');
+    selectedCard = card;
     document.getElementById('concreteType').value = type;
     document.getElementById('concretePrice').value = price;
-
-    document.querySelectorAll('.concrete-card').forEach(card => {
-        card.classList.remove('border-blue-500', 'ring-2', 'ring-blue-300');
-        card.classList.add('border-gray-200');
-    });
-
-    event.currentTarget.classList.remove('border-gray-200');
-    event.currentTarget.classList.add('border-blue-500', 'ring-2', 'ring-blue-300');
+    updateSummary();
 }
 
-function changeAmount(value) {
-    const amountInput = document.getElementById('concreteAmount');
-    let newValue = parseFloat(amountInput.value) + value;
+function changeAmount(delta) {
+    let amount = parseFloat(document.getElementById('concreteAmount').value) + delta;
+    if (amount < 0.5) amount = 0.5;
+    document.getElementById('concreteAmount').value = amount.toFixed(1);
+    updateSummary();
+}
 
-    if (newValue < 0.5) newValue = 0.5;
-    amountInput.value = newValue.toFixed(1);
+function updateSummary() {
+    const name = document.getElementById('fullName').value;
+    const phone = document.getElementById('phone').value;
+    const address = document.getElementById('address').value;
+    const concreteType = document.getElementById('concreteType').value;
+    const concretePrice = parseInt(document.getElementById('concretePrice').value) || 0;
+    const concreteAmount = parseFloat(document.getElementById('concreteAmount').value) || 0;
+    const deliveryType = document.getElementById('deliveryType').value || 'Стандартная';
+
+    document.getElementById('summaryName').textContent = name || 'Не указано';
+    document.getElementById('summaryPhone').textContent = phone || 'Не указан';
+    document.getElementById('summaryAddress').textContent = address || 'Не указан';
+    document.getElementById('summaryConcrete').textContent = concreteType || 'Не выбрана';
+    document.getElementById('summaryAmount').textContent = concreteAmount ? `${concreteAmount} м³` : '0 м³';
+    document.getElementById('summaryDeliveryType').textContent = deliveryType || 'Не указан';
+    document.getElementById('summaryTotal').textContent = concretePrice ? (concretePrice * concreteAmount).toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' }) : '0 ₽';
 }
 
 function showSummary() {
-    const form = document.getElementById('orderForm');
-    const summary = document.getElementById('orderSummary');
-
-    if (!form.fullName.value || !form.phone.value || !form.address.value || !form.concreteType.value) {
-        alert('Пожалуйста, заполните все обязательные поля и выберите марку бетона');
-        return;
-    }
-
-    document.getElementById('summaryName').textContent = form.fullName.value;
-    document.getElementById('summaryPhone').textContent = form.phone.value;
-    document.getElementById('summaryAddress').textContent = form.address.value;
-    document.getElementById('summaryConcrete').textContent = form.concreteType.value;
-    document.getElementById('summaryAmount').textContent = form.concreteAmount.value + ' м³';
-
-    const total = parseFloat(form.concretePrice.value) * parseFloat(form.concreteAmount.value);
-    document.getElementById('summaryTotal').textContent = total.toLocaleString('ru-RU') + ' ₽';
-
-    summary.classList.remove('hidden');
-    summary.scrollIntoView({ behavior: 'smooth' });
+    updateSummary();
+    document.getElementById('orderSummary').classList.remove('hidden');
 }
 
 function hideSummary() {
@@ -46,49 +47,64 @@ function hideSummary() {
 }
 
 async function submitOrder() {
-    const form = document.getElementById('orderForm');
-    const token = localStorage.getItem('token');
+    const name = document.getElementById('fullName').value;
+    const phone = document.getElementById('phone').value;
+    const address = document.getElementById('address').value;
+    const concreteType = document.getElementById('concreteType').value;
+    const concreteAmount = parseFloat(document.getElementById('concreteAmount').value);
+    const concretePrice = parseInt(document.getElementById('concretePrice').value);
+    const deliveryType = document.getElementById('deliveryType').value || 'Стандартная';
 
-    if (!token) {
-        showNotification('Пожалуйста, войдите в аккаунт', 'error');
-        setTimeout(() => window.location.href = '/pro', 1000);
+    if (!name || !phone || !address || !concreteType || !concreteAmount) {
+        window.notify.show('Пожалуйста, заполните все поля и выберите бетон.', 'error');
         return;
     }
 
-    const orderData = {
-        concreteType: form.concreteType.value,
-        volume: parseFloat(form.concreteAmount.value),
-        deliveryType: 'Стандартная',
-        price: parseFloat(form.concretePrice.value) * parseFloat(form.concreteAmount.value),
-    };
+    const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
+    const token = tokenRow ? tokenRow.split('=')[1] : null;
+    if (!token) {
+        window.notify.show('Пожалуйста, войдите в аккаунт для оформления заказа.', 'error');
+        window.location.href = '/pro';
+        return;
+    }
 
     try {
+        console.log('Отправка заказа:', { concreteType, volume: concreteAmount, deliveryType, price: concretePrice * concreteAmount });
         const response = await fetch('http://localhost:3000/api/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify(orderData),
+            body: JSON.stringify({
+                concreteType,
+                volume: concreteAmount,
+                deliveryType,
+                price: concretePrice * concreteAmount,
+            }),
+            credentials: 'include',
         });
+
         const data = await response.json();
+        console.log('Ответ от сервера:', { status: response.status, data });
         if (response.ok) {
-            showNotification('Заказ успешно оформлен! Мы свяжемся с вами.', 'success');
-            form.reset();
-            hideSummary();
-            document.querySelectorAll('.concrete-card').forEach(card => {
-                card.classList.remove('border-blue-500', 'ring-2', 'ring-blue-300');
-                card.classList.add('border-gray-200');
-            });
+            window.notify.show('Заказ успешно отправлен!', 'success');
+            document.getElementById('orderForm').reset();
+            if (selectedCard) selectedCard.classList.remove('selected');
+            selectedCard = null;
+            document.getElementById('orderSummary').classList.add('hidden');
+            document.getElementById('concreteType').value = '';
+            document.getElementById('concretePrice').value = '';
+            updateSummary();
         } else {
-            showNotification(data.error || 'Ошибка при оформлении заказа', 'error');
+            window.notify.show(data.error || 'Ошибка при создании заказа.', 'error');
         }
     } catch (error) {
-        showNotification('Ошибка сервера', 'error');
+        console.error('Ошибка при отправке заказа:', error);
+        window.notify.show('Произошла ошибка. Попробуйте позже.', 'error');
     }
 }
 
-document.getElementById('phone').addEventListener('input', function (e) {
-    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
-    e.target.value = !x[2] ? x[1] : '+7 (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+document.addEventListener('DOMContentLoaded', () => {
+    updateSummary();
 });

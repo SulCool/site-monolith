@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/pro.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="/js/notifications.js"></script>
+    <script src="/js/notifications.js" defer></script>
     <title>Профиль</title>
 </head>
 
@@ -76,27 +76,14 @@
                 const data = await response.json();
                 console.log('Ответ от сервера:', { status: response.status, data });
                 if (response.ok) {
-                    if (typeof showNotification === 'function') {
-                        showNotification('Вход успешен!', 'success');
-                    } else {
-                        console.warn('showNotification не доступен, используем alert');
-                        alert('Вход успешен!');
-                    }
+                    window.notify.show('Вход успешен!', 'success');
                     setTimeout(() => window.location.href = '/profile', 1000);
                 } else {
-                    if (typeof showNotification === 'function') {
-                        showNotification(data.error || 'Ошибка входа', 'error');
-                    } else {
-                        alert(data.error || 'Ошибка входа');
-                    }
+                    window.notify.show(data.error || 'Ошибка входа', 'error');
                 }
             } catch (error) {
                 console.error('Ошибка при входе:', error);
-                if (typeof showNotification === 'function') {
-                    showNotification('Ошибка сервера', 'error');
-                } else {
-                    alert('Ошибка сервера');
-                }
+                window.notify.show('Ошибка сервера', 'error');
             }
         });
     </script>

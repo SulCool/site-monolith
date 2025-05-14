@@ -35,6 +35,7 @@ router.post('/', authenticateToken, async (req, res) => {
         });
         res.status(201).json({ message: 'Заказ создан', order });
     } catch (error) {
+        console.error('Ошибка при создании заказа:', error);
         res.status(400).json({ error: 'Ошибка при создании заказа' });
     }
 });
