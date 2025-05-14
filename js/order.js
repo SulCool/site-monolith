@@ -54,7 +54,7 @@ async function submitOrder() {
     const concreteAmount = parseFloat(document.getElementById('concreteAmount').value);
     const concretePrice = parseInt(document.getElementById('concretePrice').value);
     const deliveryType = document.getElementById('deliveryType').value || 'Стандартная';
-    const productId = 1; // Замените на динамический выбор productId
+    const productId = 1; 
 
     if (!name || !phone || !address || !concreteType || isNaN(concreteAmount) || isNaN(concretePrice)) {
         window.notify.show('Пожалуйста, заполните все поля и выберите бетон.', 'error');
