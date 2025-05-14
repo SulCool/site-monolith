@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/notifications.js" defer></script>
 </head>
-
 <body class="bg-gray-50 min-h-screen">
     <header>
         <div class="logo">
@@ -36,6 +34,47 @@
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <div class="bg-white rounded-xl shadow-lg p-8">
             <h1 class="text-3xl font-bold text-gray-800 mb-6">Панель администратора</h1>
+
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Управление продуктами</h2>
+            <form id="productForm" class="space-y-4 mb-8">
+                <input type="hidden" id="productId">
+                <div>
+                    <label for="productName" class="block text-sm font-medium text-gray-700 mb-1">Название</label>
+                    <input type="text" id="productName" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]" required>
+                </div>
+                <div>
+                    <label for="productDescription" class="block text-sm font-medium text-gray-700 mb-1">Описание</label>
+                    <textarea id="productDescription" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]"></textarea>
+                </div>
+                <div>
+                    <label for="productPrice" class="block text-sm font-medium text-gray-700 mb-1">Цена (₽/м³)</label>
+                    <input type="number" id="productPrice" step="0.01" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]" required>
+                </div>
+                <div>
+                    <label for="productStock" class="block text-sm font-medium text-gray-700 mb-1">Количество на складе</label>
+                    <input type="number" id="productStock" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]" required>
+                </div>
+                <div>
+                    <label for="productCategory" class="block text-sm font-medium text-gray-700 mb-1">Категория</label>
+                    <select id="productCategory" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]">
+                        <option value="Марка">Марка</option>
+                        <option value="Водонепроницаемость">Водонепроницаемость</option>
+                        <option value="Морозостойкость">Морозостойкость</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="productLabel" class="block text-sm font-medium text-gray-700 mb-1">Метка</label>
+                    <select id="productLabel" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7fbf94]">
+                        <option value="Эконом">Эконом</option>
+                        <option value="Популярный">Популярный</option>
+                        <option value="Премиум">Премиум</option>
+                    </select>
+                </div>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Сохранить</button>
+                <button type="button" onclick="resetProductForm()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">Отмена</button>
+            </form>
+            <div id="productsList" class="space-y-4 mb-8"></div>
+
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Управление заказами</h2>
             <div id="orders" class="space-y-4"></div>
         </div>
@@ -112,8 +151,121 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadOrders);
+        async function loadProducts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/products', {
+                    credentials: 'include',
+                });
+                const products = await response.json();
+                if (response.ok) {
+                    const productsList = document.getElementById('productsList');
+                    if (products.length === 0) {
+                        productsList.innerHTML = '<p class="text-gray-600">Продукты отсутствуют.</p>';
+                    } else {
+                        productsList.innerHTML = products.map(product => `
+                            <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                                <div>
+                                    <p><strong>${product.name}</strong></p>
+                                    <p>Описание: ${product.description || 'Нет'}</p>
+                                    <p>Цена: ${product.price} ₽/м³</p>
+                                    <p>На складе: ${product.stock}</p>
+                                    <p>Категория: ${product.category || 'Не указана'}</p>
+                                    <p>Метка: ${product.label || 'Нет'}</p>
+                                </div>
+                                <div>
+                                    <button onclick="editProduct(${product.id}, '${product.name}', '${product.description || ''}', ${product.price}, ${product.stock}, '${product.category || ''}', '${product.label || ''}')" class="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 mr-2">
+                                        Редактировать
+                                    </button>
+                                    <button onclick="deleteProduct(${product.id})" class="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700">
+                                        Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    window.notify.show('Ошибка загрузки продуктов', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки продуктов:', error);
+                window.notify.show('Ошибка сервера', 'error');
+            }
+        }
+
+        function resetProductForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+        }
+
+        function editProduct(id, name, description, price, stock, category, label) {
+            document.getElementById('productId').value = id;
+            document.getElementById('productName').value = name;
+            document.getElementById('productDescription').value = description;
+            document.getElementById('productPrice').value = price;
+            document.getElementById('productStock').value = stock;
+            document.getElementById('productCategory').value = category;
+            document.getElementById('productLabel').value = label;
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Вы уверены, что хотите удалить этот продукт?')) return;
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    window.notify.show('Продукт удалён!', 'success');
+                    loadProducts();
+                } else {
+                    window.notify.show(data.error || 'Ошибка удаления продукта', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка при удалении продукта:', error);
+                window.notify.show('Ошибка сервера', 'error');
+            }
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('productId').value;
+            const productData = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                category: document.getElementById('productCategory').value,
+                label: document.getElementById('productLabel').value,
+            };
+
+            try {
+                const url = id ? `http://localhost:3000/api/products/${id}` : 'http://localhost:3000/api/products';
+                const method = id ? 'PATCH' : 'POST';
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData),
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    window.notify.show(id ? 'Продукт обновлён!' : 'Продукт создан!', 'success');
+                    resetProductForm();
+                    loadProducts();
+                } else {
+                    window.notify.show(data.error || 'Ошибка сохранения продукта', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка при сохранении продукта:', error);
+                window.notify.show('Ошибка сервера', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrders();
+            loadProducts();
+        });
     </script>
 </body>
-
 </html>

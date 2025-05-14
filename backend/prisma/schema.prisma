@@ -24,6 +24,8 @@ model Product {
     description String?
     price       Float
     stock       Int
+    category    String?  
+    label       String?  
     orders      Order[]  @relation("ProductToOrder")
 }
 
