@@ -54,34 +54,35 @@ async function submitOrder() {
     const concreteAmount = parseFloat(document.getElementById('concreteAmount').value);
     const concretePrice = parseInt(document.getElementById('concretePrice').value);
     const deliveryType = document.getElementById('deliveryType').value || 'Стандартная';
+    const productId = 1; // Замените на динамический выбор productId
 
-    if (!name || !phone || !address || !concreteType || !concreteAmount) {
+    if (!name || !phone || !address || !concreteType || isNaN(concreteAmount) || isNaN(concretePrice)) {
         window.notify.show('Пожалуйста, заполните все поля и выберите бетон.', 'error');
         return;
     }
 
-    const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
-    const token = tokenRow ? tokenRow.split('=')[1] : null;
-    if (!token) {
-        window.notify.show('Пожалуйста, войдите в аккаунт для оформления заказа.', 'error');
-        window.location.href = '/pro';
-        return;
-    }
+    const orderData = {
+        concreteType,
+        volume: concreteAmount,
+        deliveryType,
+        price: concretePrice * concreteAmount,
+        productId,
+    };
+    console.log('Отправка заказа:', orderData, 'Типы данных:', {
+        concreteType: typeof concreteType,
+        volume: typeof concreteAmount,
+        deliveryType: typeof deliveryType,
+        price: typeof (concretePrice * concreteAmount),
+        productId: typeof productId,
+    });
 
     try {
-        console.log('Отправка заказа:', { concreteType, volume: concreteAmount, deliveryType, price: concretePrice * concreteAmount });
         const response = await fetch('http://localhost:3000/api/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                concreteType,
-                volume: concreteAmount,
-                deliveryType,
-                price: concretePrice * concreteAmount,
-            }),
+            body: JSON.stringify(orderData),
             credentials: 'include',
         });
 
@@ -98,6 +99,10 @@ async function submitOrder() {
             updateSummary();
         } else {
             window.notify.show(data.error || 'Ошибка при создании заказа.', 'error');
+            if (response.status === 401 || response.status === 403) {
+                window.notify.show('Пожалуйста, войдите в аккаунт.', 'error');
+                window.location.href = '/pro';
+            }
         }
     } catch (error) {
         console.error('Ошибка при отправке заказа:', error);

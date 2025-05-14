@@ -1,52 +1,54 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String?
-  orders    Order[]
-  createdAt DateTime @default(now())
-  reviews   Review[] @relation("UserToReview")
+    id        Int      @id @default(autoincrement())
+    email     String   @unique
+    password  String
+    name      String?
+    orders    Order[]
+    createdAt DateTime @default(now())
+    reviews   Review[] @relation("UserToReview")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  price       Float
-  stock       Int
-  orders      Order[]
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String?
+    price       Float
+    stock       Int
+    orders      Order[]  @relation("ProductToOrder")
 }
 
 model Order {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  user         User     @relation(fields: [userId], references: [id])
-  concreteType String?
-  volume       Float?
-  deliveryType String?
-  price        Float?
-  status       String   @default("NEW")
-  createdAt    DateTime @default(now())
+    id           Int      @id @default(autoincrement())
+    userId       Int
+    user         User     @relation(fields: [userId], references: [id])
+    productId    Int?
+    product      Product? @relation("ProductToOrder", fields: [productId], references: [id])
+    concreteType String?
+    volume       Float?
+    deliveryType String?
+    price        Float?
+    status       String   @default("NEW")
+    createdAt    DateTime @default(now())
 }
 
 model Review {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  user         User     @relation("UserToReview", fields: [userId], references: [id])
-  rating       Int
-  text         String
-  concreteType String?
-  volume       Float?
-  deliveryType String?
-  company      String?  
-  createdAt    DateTime @default(now())
+    id           Int      @id @default(autoincrement())
+    userId       Int
+    user         User     @relation("UserToReview", fields: [userId], references: [id])
+    rating       Int
+    text         String
+    concreteType String?
+    volume       Float?
+    deliveryType String?
+    company      String?  
+    createdAt    DateTime @default(now())
 }
