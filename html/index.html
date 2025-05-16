@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +8,9 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/slider.css">
     <script src="/js/notifications.js" defer></script>
+    <script src="/js/hamburger.js" defer></script>
+    <script src="/js/nav.js" defer></script>
 </head>
-
 <body>
     <header>
         <div class="logo">
@@ -21,15 +21,17 @@
             <p><i class="fas fa-map-marker-alt"></i> ул. Станкостроителей, д.1, Иваново</p>
             <p><i class="fas fa-envelope"></i> <a href="mailto:monolith@info.ru">monolith@info.ru</a></p>
         </div>
-        <nav id="nav-menu">
+        <button class="hamburger">☰</button>
+        <nav id="nav-menu" class="nav">
             <a href="/">Главная</a>
             <a href="/order">Заказ</a>
             <a href="/catalog">Категории товара</a>
             <a href="/reviews">Отзывы</a>
-            <a href="/profile" class="hidden">Профиль</a>
-            <a href="/register" class="hidden">Регистрация</a>
+            <a href="/profile" id="profile-link" class="hidden">Профиль</a>
+            <a href="/register" id="register-link" class="hidden">Регистрация</a>
             <a href="/admin" id="admin-link" class="hidden">Админ-панель</a>
             <a href="#" id="logout-link" class="hidden">Выйти</a>
+            <a href="/pro" id="login-link" class="hidden">Войти</a>
         </nav>
     </header>
 
@@ -42,15 +44,11 @@
             <h1>Делаем надёжно, работаем на результат!</h1>
             <div class="company-item">
                 <h2>О компании</h2>
-                <p>Мы — профессиональная компания по доставке бетона, которая зарекомендовала себя как надежный партнер
-                    в строительстве. Наша миссия — обеспечить наших клиентов высококачественным бетоном и безупречным
-                    обслуживанием.</p>
+                <p>Мы — профессиональная компания по доставке бетона, которая зарекомендовала себя как надежный партнер в строительстве. Наша миссия — обеспечить наших клиентов высококачественным бетоном и безупречным обслуживанием.</p>
             </div>
             <div class="company-item">
                 <h2>Наша история</h2>
-                <p>С момента основания мы стремились стать лидерами в области бетона. Накопленный опыт и современные
-                    технологии позволяют нам предлагать широкий ассортимент бетонных смесей, соответствующих
-                    международным стандартам.</p>
+                <p>С момента основания мы стремились стать лидерами в области бетона. Накопленный опыт и современные технологии позволяют нам предлагать широкий ассортимент бетонных смесей, соответствующих международным стандартам.</p>
             </div>
         </div>
         <div class="company-image">
@@ -64,20 +62,17 @@
             <div class="advantage-card">
                 <img src="/assets/качество3.png" alt="Качество">
                 <h3>Качество</h3>
-                <p>Наш бетон проходит строгий контроль качества и соответствует международным стандартам, обеспечивая
-                    долговечность и надежность ваших конструкций.</p>
+                <p>Наш бетон проходит строгий контроль качества и соответствует международным стандартам, обеспечивая долговечность и надежность ваших конструкций.</p>
             </div>
             <div class="advantage-card">
                 <img src="/assets/доставка2.png" alt="Доставка">
                 <h3>Скорость доставки</h3>
-                <p>Мы предлагаем оперативную доставку, включая ночные и срочные варианты, чтобы ваш проект не
-                    останавливался ни на минуту.</p>
+                <p>Мы предлагаем оперативную доставку, включая ночные и срочные варианты, чтобы ваш проект не останавливался ни на минуту.</p>
             </div>
             <div class="advantage-card">
                 <img src="/assets/индивид2.png" alt="Индивидуальный подход">
                 <h3>Индивидуальный подход</h3>
-                <p>Наши специалисты подберут оптимальный состав бетона и график доставки, учитывая уникальные
-                    потребности вашего проекта.</p>
+                <p>Наши специалисты подберут оптимальный состав бетона и график доставки, учитывая уникальные потребности вашего проекта.</p>
             </div>
         </div>
     </section>
@@ -172,7 +167,7 @@
             <div class="map-placeholder">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d838.9770940074106!2d40.96527357939272!3d56.963382802369374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z0JzQvtC90L7Qu9C40YI!5e1!3m2!1sru!2sfr!4v1747000705513!5m2!1sru!2sfr"
-                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <div class="contact-form">
@@ -212,8 +207,6 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
-    <script src="/js/slider.js"></script>
-    <script src="/js/nav.js"></script>
+    <script src="/js/slider.js" defer></script>
 </body>
-
 </html>

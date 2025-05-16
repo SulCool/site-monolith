@@ -24,57 +24,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await response.json();
 
         if (response.ok) {
-            if (!logoutLink) {
+            if (profileLink) profileLink.classList.remove('hidden');
+            if (logoutLink) {
+                logoutLink.classList.remove('hidden');
+                attachLogoutEvent(logoutLink);
+            } else {
                 logoutLink = document.createElement('a');
                 logoutLink.href = '#';
                 logoutLink.id = 'logout-link';
                 logoutLink.textContent = 'Выйти';
                 navMenu.appendChild(logoutLink);
+                attachLogoutEvent(logoutLink);
             }
-            logoutLink.classList.remove('hidden');
-            attachLogoutEvent(logoutLink); 
-
-            if (profileLink) profileLink.classList.remove('hidden');
-            if (adminLink && data.user.role === 'ADMIN') adminLink.classList.remove('hidden');
+            if (adminLink && data.user.role === 'ADMIN') {
+                adminLink.classList.remove('hidden');
+            }
+            updateHamburgerHandlers();
         } else {
-            if (!registerLink) {
-                registerLink = document.createElement('a');
-                registerLink.href = '/register';
-                registerLink.id = 'register-link';
-                registerLink.textContent = 'Регистрация';
-                navMenu.appendChild(registerLink);
-            }
-            registerLink.classList.remove('hidden');
-
-            if (!loginLink) {
-                loginLink = document.createElement('a');
-                loginLink.href = '/pro';
-                loginLink.id = 'login-link';
-                loginLink.textContent = 'Войти';
-                navMenu.appendChild(loginLink);
-            }
-            loginLink.classList.remove('hidden');
+            if (registerLink) registerLink.classList.remove('hidden');
+            if (loginLink) loginLink.classList.remove('hidden');
+            updateHamburgerHandlers();
         }
     } catch (error) {
         console.error('Ошибка проверки авторизации:', error);
-        if (!registerLink) {
-            registerLink = document.createElement('a');
-            registerLink.href = '/register';
-            registerLink.id = 'register-link';
-            registerLink.textContent = 'Регистрация';
-            navMenu.appendChild(registerLink);
-        }
-        registerLink.classList.remove('hidden');
-
-        if (!loginLink) {
-            loginLink = document.createElement('a');
-            loginLink.href = '/pro';
-            loginLink.id = 'login-link';
-            loginLink.textContent = 'Войти';
-            navMenu.appendChild(loginLink);
-        }
-        loginLink.classList.remove('hidden');
+        if (registerLink) registerLink.classList.remove('hidden');
+        if (loginLink) loginLink.classList.remove('hidden');
         window.notify.show('Ошибка сервера', 'error');
+        updateHamburgerHandlers();
     }
 });
 
@@ -103,4 +79,22 @@ function attachLogoutEvent(logoutLink) {
             window.notify.show('Ошибка сервера', 'error');
         }
     });
+}
+
+function updateHamburgerHandlers() {
+    const nav = document.querySelector('#nav-menu.nav');
+    const hamburger = document.querySelector('.hamburger');
+    if (nav && hamburger) {
+        const links = nav.querySelectorAll('a');
+        links.forEach(link => {
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+        });
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+                hamburger.textContent = '☰';
+            });
+        });
+    }
 }
