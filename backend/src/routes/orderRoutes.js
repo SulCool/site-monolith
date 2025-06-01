@@ -101,7 +101,6 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
         const orders = await prisma.order.findMany({
             where: { userId: parseInt(userId) },
         });
-        // Добавляем перевод статуса для каждого заказа
         const ordersWithTranslation = orders.map(order => ({
             ...order,
             statusDisplay: statusTranslations[order.status]

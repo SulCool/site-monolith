@@ -24,13 +24,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await response.json();
 
         if (response.ok) {
+            console.log('Пользователь авторизован:', data.user);
             if (profileLink) profileLink.classList.remove('hidden');
             if (logoutLink) {
                 logoutLink.classList.remove('hidden');
                 attachLogoutEvent(logoutLink);
             } else {
                 logoutLink = document.createElement('a');
-                logoutLink.href = '#';
                 logoutLink.id = 'logout-link';
                 logoutLink.textContent = 'Выйти';
                 navMenu.appendChild(logoutLink);
@@ -39,19 +39,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (adminLink && data.user.role === 'ADMIN') {
                 adminLink.classList.remove('hidden');
             }
-            updateHamburgerHandlers();
         } else {
+            console.log('Пользователь не авторизован');
             if (registerLink) registerLink.classList.remove('hidden');
             if (loginLink) loginLink.classList.remove('hidden');
-            updateHamburgerHandlers();
         }
     } catch (error) {
         console.error('Ошибка проверки авторизации:', error);
         if (registerLink) registerLink.classList.remove('hidden');
         if (loginLink) loginLink.classList.remove('hidden');
-        window.notify.show('Ошибка сервера', 'error');
-        updateHamburgerHandlers();
+        window.notify.show('Ошибка сервера при проверке авторизации', 'error');
     }
+
+    updateHamburgerHandlers();
 });
 
 function attachLogoutEvent(logoutLink) {
@@ -64,19 +64,19 @@ function attachLogoutEvent(logoutLink) {
                 method: 'POST',
                 credentials: 'include',
             });
-            console.log('Ответ от сервера:', logoutResponse.status);
+            console.log('Ответ от сервера /logout:', { status: logoutResponse.status });
             const logoutData = await logoutResponse.json();
             if (logoutResponse.ok) {
                 console.log('Выход успешен, перенаправление на /pro');
                 window.notify.show('Выход успешен', 'success');
-                window.location.href = '/pro';
+                window.location.assign('/pro');
             } else {
                 console.error('Ошибка от сервера:', logoutData.error);
                 window.notify.show(logoutData.error || 'Ошибка при выходе', 'error');
             }
         } catch (error) {
             console.error('Ошибка при выходе:', error);
-            window.notify.show('Ошибка сервера', 'error');
+            window.notify.show('Ошибка сервера при выходе', 'error');
         }
     });
 }
@@ -88,6 +88,9 @@ function updateHamburgerHandlers() {
         const links = nav.querySelectorAll('a');
         links.forEach(link => {
             const newLink = link.cloneNode(true);
+            if (link.id === 'logout-link') {
+                attachLogoutEvent(newLink);
+            }
             link.parentNode.replaceChild(newLink, link);
         });
         nav.querySelectorAll('a').forEach(link => {

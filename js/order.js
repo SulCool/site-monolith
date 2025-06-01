@@ -34,6 +34,7 @@ async function loadConcreteCards() {
         console.error('Ошибка загрузки продуктов:', error);
         window.notify.show('Ошибка сервера', 'error');
     }
+    updateSummary();
 }
 
 function selectConcrete(type, price, productId) {
