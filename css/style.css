@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* Базовые стили для всех устройств (Mobile-First) */
+/* Базовые стили */
 * {
     margin: 0;
     padding: 0;
@@ -15,6 +15,7 @@ body {
     overflow-x: hidden;
 }
 
+/* Header */
 header {
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -23,34 +24,38 @@ header {
     z-index: 1000;
     padding: 0.5rem 5%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: padding 0.3s ease;
 }
 
 .logo img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
+    transition: width 0.3s ease, height 0.3s ease;
 }
 
 .contact-info {
-    text-align: center;
-    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75rem;
+    color: #333;
+    text-align: left;
 }
 
 .contact-info p {
-    font-size: 0.8rem;
-    color: #333;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
+    transition: font-size 0.3s ease;
 }
 
 .contact-info i {
     color: #7fbf94;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .contact-info a {
@@ -64,40 +69,29 @@ header {
 }
 
 .hamburger {
-    display: block;
+    display: none;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     cursor: pointer;
     color: #333;
-    padding: 0.5rem;
+    padding: 0.3rem;
     z-index: 1001;
 }
 
 .nav {
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-    background: #ffffff;
-    padding: 1rem;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.nav.active {
     display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0;
 }
 
 .nav a {
     text-decoration: none;
     color: #333;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
-    padding: 0.5rem;
+    padding: 0.3rem;
     transition: color 0.3s ease;
 }
 
@@ -105,6 +99,7 @@ header {
     color: #7fbf94;
 }
 
+/* Hero */
 .hero {
     min-height: 40vh;
     background-image: url('/assets/1.jpg');
@@ -135,6 +130,7 @@ header {
     padding: 0 1rem;
 }
 
+/* Company Section */
 .company-section {
     max-width: 100%;
     margin: 1rem 5%;
@@ -176,6 +172,7 @@ header {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Why Choose Us */
 .why-choose-us {
     background-image: url('/assets/5.jfif');
     background-size: cover;
@@ -244,6 +241,7 @@ header {
     color: #555;
 }
 
+/* Reviews Section */
 .reviews-section {
     max-width: 100%;
     margin: 1rem 5%;
@@ -369,6 +367,7 @@ header {
     text-decoration: underline;
 }
 
+/* Contacts Section */
 .contacts-section {
     max-width: 100%;
     margin: 1rem 5%;
@@ -439,6 +438,7 @@ header {
     background: #6aaf84;
 }
 
+/* Footer */
 footer {
     background-color: #333;
     color: white;
@@ -491,6 +491,7 @@ footer {
     opacity: 0.7;
 }
 
+/* Scroll to Top */
 .scroll-to-top {
     position: fixed;
     bottom: 1rem;
@@ -529,38 +530,28 @@ footer {
     display: none !important;
 }
 
+/* Медиа-запросы */
 @media (min-width: 576px) {
     header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 5%;
+        padding: 0.75rem 5%;
     }
 
     .logo img {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
     }
 
     .contact-info {
-        margin-bottom: 0;
+        font-size: 0.85rem;
     }
 
-    .hamburger {
-        display: none;
-    }
-
-    .nav {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        position: static;
-        box-shadow: none;
-        padding: 0;
+    .contact-info p {
+        margin-bottom: 0.3rem;
     }
 
     .nav a {
         font-size: 1rem;
+        padding: 0.5rem;
     }
 
     .hero h1 {
@@ -659,13 +650,44 @@ footer {
     }
 }
 
-@media (min-width: 992px) {
-    .logo img {
-        width: 70px;
-        height: 70px;
+@media (max-width: 576px) {
+    .hamburger {
+        display: block;
     }
 
-    .contact-info p {
+    .nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 5%;
+        background: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem;
+    }
+
+    .nav.active {
+        display: flex;
+    }
+
+    .contact-info {
+        flex-direction: row;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 992px) {
+    header {
+        padding: 1rem 5%;
+    }
+
+    .logo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .contact-info {
         font-size: 0.9rem;
     }
 
