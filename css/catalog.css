@@ -19,8 +19,9 @@ body {
     background-color: #e6e6e6;
     padding: 1rem 5%;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
     align-items: center;
 }
 
@@ -299,8 +300,7 @@ footer {
 
 @media (min-width: 576px) {
     .sub-nav {
-        flex-direction: row;
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     h1 {
