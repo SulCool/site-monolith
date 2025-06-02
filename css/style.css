@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* Базовые стили */
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +14,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Header */
 header {
     background-color: #ffffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -99,7 +97,6 @@ header {
     color: #7fbf94;
 }
 
-/* Hero */
 .hero {
     min-height: 40vh;
     background-image: url('/assets/1.jpg');
@@ -130,7 +127,6 @@ header {
     padding: 0 1rem;
 }
 
-/* Company Section */
 .company-section {
     max-width: 100%;
     margin: 1rem 5%;
@@ -172,7 +168,6 @@ header {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Why Choose Us */
 .why-choose-us {
     background-image: url('/assets/5.jfif');
     background-size: cover;
@@ -241,7 +236,6 @@ header {
     color: #555;
 }
 
-/* Reviews Section */
 .reviews-section {
     max-width: 100%;
     margin: 1rem 5%;
@@ -367,7 +361,6 @@ header {
     text-decoration: underline;
 }
 
-/* Contacts Section */
 .contacts-section {
     max-width: 100%;
     margin: 1rem 5%;
@@ -438,7 +431,6 @@ header {
     background: #6aaf84;
 }
 
-/* Footer */
 footer {
     background-color: #333;
     color: white;
@@ -491,7 +483,6 @@ footer {
     opacity: 0.7;
 }
 
-/* Scroll to Top */
 .scroll-to-top {
     position: fixed;
     bottom: 1rem;
@@ -530,7 +521,13 @@ footer {
     display: none !important;
 }
 
-/* Медиа-запросы */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
 @media (min-width: 576px) {
     header {
         padding: 0.75rem 5%;

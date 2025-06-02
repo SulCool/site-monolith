@@ -120,6 +120,13 @@ h2 {
     text-decoration: underline;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
 button {
     background: #fff;
     color: #000;
